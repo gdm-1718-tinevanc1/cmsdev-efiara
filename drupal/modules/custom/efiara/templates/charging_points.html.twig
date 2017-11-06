@@ -1,0 +1,22 @@
+{#
+/**
+ * @file charging_points.html.twig
+ * Default theme implementation to present Charging points data.
+ *
+ * This template is used when viewing Charging points pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_charging_points()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('charging_points') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

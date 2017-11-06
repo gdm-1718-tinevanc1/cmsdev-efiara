@@ -1,0 +1,132 @@
+# Vehicles routing definition
+vehicles.settings_tab:
+  route_name: vehicles.settings
+  title: 'Settings'
+  base_route: vehicles.settings
+
+entity.vehicles.canonical:
+  route_name: entity.vehicles.canonical
+  base_route: entity.vehicles.canonical
+  title: 'View'
+
+entity.vehicles.edit_form:
+  route_name: entity.vehicles.edit_form
+  base_route: entity.vehicles.canonical
+  title: 'Edit'
+
+entity.vehicles.delete_form:
+  route_name:  entity.vehicles.delete_form
+  base_route:  entity.vehicles.canonical
+  title: Delete
+  weight: 10
+
+# Charging points routing definition
+charging_points.settings_tab:
+  route_name: charging_points.settings
+  title: 'Settings'
+  base_route: charging_points.settings
+
+entity.charging_points.canonical:
+  route_name: entity.charging_points.canonical
+  base_route: entity.charging_points.canonical
+  title: 'View'
+
+entity.charging_points.edit_form:
+  route_name: entity.charging_points.edit_form
+  base_route: entity.charging_points.canonical
+  title: 'Edit'
+
+entity.charging_points.delete_form:
+  route_name:  entity.charging_points.delete_form
+  base_route:  entity.charging_points.canonical
+  title: Delete
+  weight: 10
+
+# Bookings routing definition
+bookings.settings_tab:
+  route_name: bookings.settings
+  title: 'Settings'
+  base_route: bookings.settings
+
+entity.bookings.canonical:
+  route_name: entity.bookings.canonical
+  base_route: entity.bookings.canonical
+  title: 'View'
+
+entity.bookings.edit_form:
+  route_name: entity.bookings.edit_form
+  base_route: entity.bookings.canonical
+  title: 'Edit'
+
+entity.bookings.delete_form:
+  route_name:  entity.bookings.delete_form
+  base_route:  entity.bookings.canonical
+  title: Delete
+  weight: 10
+
+# Owner routing definition
+owner.settings_tab:
+  route_name: owner.settings
+  title: 'Settings'
+  base_route: owner.settings
+
+entity.owner.canonical:
+  route_name: entity.owner.canonical
+  base_route: entity.owner.canonical
+  title: 'View'
+
+entity.owner.edit_form:
+  route_name: entity.owner.edit_form
+  base_route: entity.owner.canonical
+  title: 'Edit'
+
+entity.owner.delete_form:
+  route_name:  entity.owner.delete_form
+  base_route:  entity.owner.canonical
+  title: Delete
+  weight: 10
+
+# Renter routing definition
+renter.settings_tab:
+  route_name: renter.settings
+  title: 'Settings'
+  base_route: renter.settings
+
+entity.renter.canonical:
+  route_name: entity.renter.canonical
+  base_route: entity.renter.canonical
+  title: 'View'
+
+entity.renter.edit_form:
+  route_name: entity.renter.edit_form
+  base_route: entity.renter.canonical
+  title: 'Edit'
+
+entity.renter.delete_form:
+  route_name:  entity.renter.delete_form
+  base_route:  entity.renter.canonical
+  title: Delete
+  weight: 10
+
+# Owner charging points routing definition
+owner_charging_points.settings_tab:
+  route_name: owner_charging_points.settings
+  title: 'Settings'
+  base_route: owner_charging_points.settings
+
+entity.owner_charging_points.canonical:
+  route_name: entity.owner_charging_points.canonical
+  base_route: entity.owner_charging_points.canonical
+  title: 'View'
+
+entity.owner_charging_points.edit_form:
+  route_name: entity.owner_charging_points.edit_form
+  base_route: entity.owner_charging_points.canonical
+  title: 'Edit'
+
+entity.owner_charging_points.delete_form:
+  route_name:  entity.owner_charging_points.delete_form
+  base_route:  entity.owner_charging_points.canonical
+  title: Delete
+  weight: 10
+

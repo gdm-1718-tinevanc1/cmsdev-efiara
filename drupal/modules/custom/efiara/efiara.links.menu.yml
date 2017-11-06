@@ -1,0 +1,84 @@
+
+# Vehicles menu items definition
+entity.vehicles.collection:
+  title: 'Vehicles list'
+  route_name: entity.vehicles.collection
+  description: 'List Vehicles entities'
+  parent: system.admin_structure
+  weight: 100
+
+vehicles.admin.structure.settings:
+  title: Vehicles settings
+  description: 'Configure Vehicles entities'
+  route_name: vehicles.settings
+  parent: system.admin_structure
+
+# Charging points menu items definition
+entity.charging_points.collection:
+  title: 'Charging points list'
+  route_name: entity.charging_points.collection
+  description: 'List Charging points entities'
+  parent: system.admin_structure
+  weight: 100
+
+charging_points.admin.structure.settings:
+  title: Charging points settings
+  description: 'Configure Charging points entities'
+  route_name: charging_points.settings
+  parent: system.admin_structure
+
+# Bookings menu items definition
+entity.bookings.collection:
+  title: 'Bookings list'
+  route_name: entity.bookings.collection
+  description: 'List Bookings entities'
+  parent: system.admin_structure
+  weight: 100
+
+bookings.admin.structure.settings:
+  title: Bookings settings
+  description: 'Configure Bookings entities'
+  route_name: bookings.settings
+  parent: system.admin_structure
+
+# Owner menu items definition
+entity.owner.collection:
+  title: 'Owner list'
+  route_name: entity.owner.collection
+  description: 'List Owner entities'
+  parent: system.admin_structure
+  weight: 100
+
+owner.admin.structure.settings:
+  title: Owner settings
+  description: 'Configure Owner entities'
+  route_name: owner.settings
+  parent: system.admin_structure
+
+# Renter menu items definition
+entity.renter.collection:
+  title: 'Renter list'
+  route_name: entity.renter.collection
+  description: 'List Renter entities'
+  parent: system.admin_structure
+  weight: 100
+
+renter.admin.structure.settings:
+  title: Renter settings
+  description: 'Configure Renter entities'
+  route_name: renter.settings
+  parent: system.admin_structure
+
+# Owner charging points menu items definition
+entity.owner_charging_points.collection:
+  title: 'Owner charging points list'
+  route_name: entity.owner_charging_points.collection
+  description: 'List Owner charging points entities'
+  parent: system.admin_structure
+  weight: 100
+
+owner_charging_points.admin.structure.settings:
+  title: Owner charging points settings
+  description: 'Configure Owner charging points entities'
+  route_name: owner_charging_points.settings
+  parent: system.admin_structure

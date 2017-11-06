@@ -1,0 +1,37 @@
+.tabview{
+    display: none;
+    border: solid 1px #6CBFA5;
+    padding: 0 10px 10px;
+  }
+   
+.tabview—active{
+    display: block;
+}
+
+.tabs{
+    margin-bottom: 15px;
+}
+  
+.tabs__button{
+    display: inline-block;
+    text-align: center;
+    height: 30px;
+    width: 21.2%;
+    line-height: 220%;
+    padding: 5px;
+    background-color: #222222;
+    text-decoration: none;
+    color: #FFFFFF;
+    font-size: 0.83rem;
+    font-weight: 300;
+
+    &:last{
+        padding-right:0;
+    }
+
+    &--active{
+        position:relative;
+        background-color: #6CBFA5;
+    }
+  }
+  

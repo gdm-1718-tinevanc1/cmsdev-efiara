@@ -1,0 +1,22 @@
+h1, h2 {
+    font-weight: normal;
+}  
+
+h4{
+  margin-bottom: 0px;
+}
+
+.title{
+    color: #000000;
+    font-weight: bold;
+}
+
+.title--page{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.title--request{
+    color: $primary-color;
+    font-weight: 600;
+}

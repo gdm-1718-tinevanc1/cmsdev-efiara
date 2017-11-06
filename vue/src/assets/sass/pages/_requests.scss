@@ -1,0 +1,50 @@
+.request{
+    background-color: #ffffff; 
+    color: #000000;
+    padding: 15px;
+    margin: 15px;
+    p{
+        margin:0;
+        padding:0;
+
+        &.title--request{
+            padding-bottom: 10px;
+        }
+        &.request__date{
+            font-size: 0.75rem;
+        }
+        &.request__adress{
+            font-size: 0.8rem;
+        }
+        &.request__price{
+            font-size: 0.8rem;
+        }
+    }
+    .request__check{
+        float: right;
+        font-size: 1.5rem;
+        margin-top: -5px;
+
+        &--pending{
+            @extend .request__check;  
+            color: #ffffff;          
+            text-shadow: 0px 0px 1px #000;
+        }
+        &--approved{
+            @extend .request__check;                        
+            text-shadow: 0px 0px 1px $primary-color;
+            color: $primary-color;
+        }
+        &--canceled{
+            @extend .request__check;                        
+            text-shadow: 0px 0px 1px #d3670f;
+            color: #d3670f;
+        }
+        &--disapproved{
+            @extend .request__check;                        
+            text-shadow: 0px 0px 1px #af0202;
+            color: #af0202;
+        }
+        
+    }
+}

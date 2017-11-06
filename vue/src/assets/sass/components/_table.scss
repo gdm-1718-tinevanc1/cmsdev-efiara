@@ -1,0 +1,14 @@
+.tableDetail{
+    border-collapse: collapse;
+    width: 100%;
+
+    td{
+         padding: 8px;
+     }
+
+     tr:nth-child(even){
+        background-color: #f2f2f2;
+        border: 1px solid #DDDEDE;
+      }
+ }
+ 

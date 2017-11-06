@@ -1,0 +1,100 @@
+.form{
+  input{
+    height: 30px;
+    width: calc(75% - 5px);
+    padding-left: 5px;
+    border: none;
+    color: $secondary-color;
+    margin: 5px 5px 12px 12.5%;
+    border-radius: 4px;
+  }
+  
+  label{
+    font-size: 0.9rem;
+    font-weight: 320;
+    margin: 5px;
+    margin-left: 12.5%;
+  }
+}
+  
+.form--login{
+  @extend .form;
+}
+
+ 
+.form--book, .form--profile, .form--create{
+  @extend .form;
+  input{
+    background-color: #FAFAFA;
+    border: 1px solid rgb(203, 205, 206);
+  }
+}
+
+.form--profile, .form--create{
+  input{
+    height: 20px;    
+  }
+}
+
+.form--home{
+  @extend .form;
+  input{
+    height: 35px;
+    width: calc(75% - 35px);
+    padding-left: 35px;
+    font-size: 1rem;
+    font-weight: 300;
+    margin-left: 0;
+    border-radius: 0;
+  }
+
+  #label--place, #label--enddate, #label--begindate{
+    position: relative;
+  }
+  
+  #label{
+    &:before{
+      font-family: FontAwesome;
+      position: absolute;
+      top: 1px;
+      left: 10px;
+      color: #000000;
+    }
+  
+    &--place:before{
+      @extend #label:before;
+      content: '\f002';
+    }
+  
+    &--begindate:before, &--enddate:before{
+      @extend #label:before;
+      content: '\f133';
+    }
+  }
+}
+
+
+.chargingpoints{
+  .input--location{
+    width: calc(100% - 45px);
+    border: 1px solid $secondary-color;
+    padding: 10px;
+    margin-bottom: 20px;
+    padding-left: 35px;
+    font-size: 0.9rem;  
+  }
+  
+  
+  #label--search{
+    position: relative;
+  
+    &:before{
+      font-family: FontAwesome;
+      position: absolute;
+      top: 1px;
+      left: 10px;
+      color: #000000;
+      content: '\f002';
+    }
+  }
+}

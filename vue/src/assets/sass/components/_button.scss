@@ -1,0 +1,34 @@
+.btn{
+    background-color: #6CBFA5;
+    text-align: center;
+    margin: 20px auto 0;
+    height:35px;
+    width: 75%;
+    line-height: 35px;
+    font-size: 1.3rem;    
+    a{
+        color: #ffffff;
+    }
+    &--primary{
+        @extend .btn;
+
+        &--bottom{
+            @extend .btn--primary; 
+            height:45px;
+            width: 90%;
+            line-height: 40px;
+            left: 5%;
+            position: fixed;
+            z-index:999;
+            bottom: 10px; 
+        }
+    }
+    &--login{
+        @extend .btn;
+        //position: relative;
+        //left:0;
+      } 
+  }
+
+
+  //btn--primary--bottom

@@ -1,0 +1,132 @@
+add vehicles entities:
+  title: 'Create new Vehicles entities'
+
+administer vehicles entities:
+  title: 'Administer Vehicles entities'
+  description: 'Allow to access the administration form to configure Vehicles entities.'
+  restrict access: true
+
+delete vehicles entities:
+  title: 'Delete Vehicles entities'
+
+edit vehicles entities:
+  title: 'Edit Vehicles entities'
+
+access vehicles overview:
+  title: 'Access the Vehicles overview page'
+
+view published vehicles entities:
+  title: 'View published Vehicles entities'
+
+view unpublished vehicles entities:
+  title: 'View unpublished Vehicles entities'
+add charging points entities:
+  title: 'Create new Charging points entities'
+
+administer charging points entities:
+  title: 'Administer Charging points entities'
+  description: 'Allow to access the administration form to configure Charging points entities.'
+  restrict access: true
+
+delete charging points entities:
+  title: 'Delete Charging points entities'
+
+edit charging points entities:
+  title: 'Edit Charging points entities'
+
+access charging points overview:
+  title: 'Access the Charging points overview page'
+
+view published charging points entities:
+  title: 'View published Charging points entities'
+
+view unpublished charging points entities:
+  title: 'View unpublished Charging points entities'
+add bookings entities:
+  title: 'Create new Bookings entities'
+
+administer bookings entities:
+  title: 'Administer Bookings entities'
+  description: 'Allow to access the administration form to configure Bookings entities.'
+  restrict access: true
+
+delete bookings entities:
+  title: 'Delete Bookings entities'
+
+edit bookings entities:
+  title: 'Edit Bookings entities'
+
+access bookings overview:
+  title: 'Access the Bookings overview page'
+
+view published bookings entities:
+  title: 'View published Bookings entities'
+
+view unpublished bookings entities:
+  title: 'View unpublished Bookings entities'
+add owner entities:
+  title: 'Create new Owner entities'
+
+administer owner entities:
+  title: 'Administer Owner entities'
+  description: 'Allow to access the administration form to configure Owner entities.'
+  restrict access: true
+
+delete owner entities:
+  title: 'Delete Owner entities'
+
+edit owner entities:
+  title: 'Edit Owner entities'
+
+access owner overview:
+  title: 'Access the Owner overview page'
+
+view published owner entities:
+  title: 'View published Owner entities'
+
+view unpublished owner entities:
+  title: 'View unpublished Owner entities'
+add renter entities:
+  title: 'Create new Renter entities'
+
+administer renter entities:
+  title: 'Administer Renter entities'
+  description: 'Allow to access the administration form to configure Renter entities.'
+  restrict access: true
+
+delete renter entities:
+  title: 'Delete Renter entities'
+
+edit renter entities:
+  title: 'Edit Renter entities'
+
+access renter overview:
+  title: 'Access the Renter overview page'
+
+view published renter entities:
+  title: 'View published Renter entities'
+
+view unpublished renter entities:
+  title: 'View unpublished Renter entities'
+add owner charging points entities:
+  title: 'Create new Owner charging points entities'
+
+administer owner charging points entities:
+  title: 'Administer Owner charging points entities'
+  description: 'Allow to access the administration form to configure Owner charging points entities.'
+  restrict access: true
+
+delete owner charging points entities:
+  title: 'Delete Owner charging points entities'
+
+edit owner charging points entities:
+  title: 'Edit Owner charging points entities'
+
+access owner charging points overview:
+  title: 'Access the Owner charging points overview page'
+
+view published owner charging points entities:
+  title: 'View published Owner charging points entities'
+
+view unpublished owner charging points entities:
+  title: 'View unpublished Owner charging points entities'

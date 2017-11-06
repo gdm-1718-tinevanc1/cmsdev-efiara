@@ -1,0 +1,22 @@
+{#
+/**
+ * @file owner_charging_points.html.twig
+ * Default theme implementation to present Owner charging points data.
+ *
+ * This template is used when viewing Owner charging points pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_owner_charging_points()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('owner_charging_points') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

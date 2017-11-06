@@ -1,0 +1,22 @@
+{#
+/**
+ * @file renter.html.twig
+ * Default theme implementation to present Renter data.
+ *
+ * This template is used when viewing Renter pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_renter()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('renter') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

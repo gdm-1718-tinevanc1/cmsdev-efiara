@@ -1,0 +1,30 @@
+entity.vehicles.add_form:
+  route_name: entity.vehicles.add_form
+  title: 'Add Vehicles'
+  appears_on:
+    - entity.vehicles.collection
+entity.charging_points.add_form:
+  route_name: entity.charging_points.add_form
+  title: 'Add Charging points'
+  appears_on:
+    - entity.charging_points.collection
+entity.bookings.add_form:
+  route_name: entity.bookings.add_form
+  title: 'Add Bookings'
+  appears_on:
+    - entity.bookings.collection
+entity.owner.add_form:
+  route_name: entity.owner.add_form
+  title: 'Add Owner'
+  appears_on:
+    - entity.owner.collection
+entity.renter.add_form:
+  route_name: entity.renter.add_form
+  title: 'Add Renter'
+  appears_on:
+    - entity.renter.collection
+entity.owner_charging_points.add_form:
+  route_name: entity.owner_charging_points.add_form
+  title: 'Add Owner charging points'
+  appears_on:
+    - entity.owner_charging_points.collection
