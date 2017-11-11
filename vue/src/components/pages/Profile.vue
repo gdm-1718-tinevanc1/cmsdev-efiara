@@ -34,6 +34,7 @@
           <input name="nummer" id="nummer" placeholder="Nummer"><br>
 
            <div class="btn--primary"><a @click="submit()">Aanpassen</a></div>
+           
         </form>
     </div>
   </div>

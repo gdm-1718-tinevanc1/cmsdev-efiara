@@ -4,7 +4,7 @@
             <h5>Mijn voertuigen:</h5>
             <div v-for="vehicle in vehicles">
                 <div class="vehicle">             
-                <router-link :to="{ name: 'Detail', params: { id: vehicle.id }}">
+                <router-link :to="{ name: 'Detail', params: { id: vehicle.id[0].value }}">
                     <img :src="vehicle.field_afbeelding[0].url"> 
                     <p class="price--big"><span class="big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
                     <p class="title">{{ vehicle.name[0].value}} {{ vehicle.field_model[0].value}},
@@ -13,6 +13,7 @@
 
                  </div>
             </div>
+            <div class="message">{{message.error}}</div>
         </div>
     </div>
 </template>
@@ -29,7 +30,10 @@ export default {
   data: function () {
     return {
       vehicles: [],
-      message: ''
+      message: {
+        error: '',
+        succes: ''
+      }
     }
   },
   created () {
@@ -39,7 +43,7 @@ export default {
       }
     })
       .then(({data: response}) => { this.vehicles = response })
-      .catch(({message: error}) => { this.message = error })
+      .catch(({message: error}) => { this.message.error = error })
   }
 }
 </script>

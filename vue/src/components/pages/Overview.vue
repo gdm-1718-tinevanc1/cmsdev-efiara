@@ -11,7 +11,7 @@
                     {{ vehicle.field_locatie[0].value}}</p> 
                  </router-link>
                  </div>
-               {{message}}  
+               {{message.error}}  
             </div>
         </div>
     </div>
@@ -29,7 +29,10 @@ export default {
   data: function () {
     return {
       vehicles: [],
-      message: ''
+      message: {
+        error: '',
+        succes: ''
+      }
     }
   },
   created () {
@@ -39,7 +42,7 @@ export default {
       }
     })
       .then(({data: response}) => { this.vehicles = response })
-      .catch(({message: error}) => { this.message = error })
+      .catch(({message: error}) => { this.message.error = error })
   }
 }
 </script>

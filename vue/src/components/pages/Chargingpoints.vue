@@ -50,7 +50,7 @@
             <!-- filterBy searchLocation in 'name' -->       
              </div>
         </div>
-        {{message}}
+          <div class="message">{{message.error}}</div>
     </div>
   </div>
 </template>
@@ -75,7 +75,10 @@ export default {
   data () {
     return {
       chargingpoints: [],
-      message: '',
+      message: {
+        error: '',
+        succes: ''
+      },
       searchLocation: 'België',
       center: {lat: 50.51, lng: 4.21},
       markers: [],
@@ -95,7 +98,7 @@ export default {
         this.getMarkers()
         console.log(this.chargingpoints.length)
       })
-      .catch(({message: error}) => { this.message = error })
+      .catch(({message: error}) => { this.message.error = error })
   },
   methods: {
     getMarkers: function () {

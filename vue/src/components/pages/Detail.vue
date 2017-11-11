@@ -1,11 +1,13 @@
 <template>
     <div class="container background--white">
         <div class="vehicle--detail">  
-            {{message}}           
+          <div class="message--error">{{message.error}}</div>
+          <div class="message--succes">{{message.succes}}</div>
+
               <img :src="vehicle.field_afbeelding[0].url"> 
               <p class="price--big"><span class="price big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
               <p class="location">{{ vehicle.field_locatie[0].value}}</p> 
-              <p class="owner">John doe</p> 
+              <p class="owner">{{ owner.name[0].value}}</p> 
               <p class="clear"></p>
         
        <div class="tabs">
@@ -85,6 +87,7 @@
 
 <script>
 import axios from 'axios'
+import { setupCache } from 'axios-cache-adapter'
 import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {
@@ -92,6 +95,14 @@ Vue.use(VueGoogleMaps, {
     key: 'AIzaSyDeyj-ODZCNmRRJbjgmIQKOKgE4Bin0zBg',
     libraries: 'places'
   }
+})
+const api = setupCache({
+  cache: {
+    maxAge: 15 * 60 * 1000
+  }
+})
+const api = axios.create({
+  adapter: cache.adapter
 })
 export default {
   beforeCreate: function () {
@@ -102,13 +113,53 @@ export default {
     return {
       id: this.$route.params.id,
       vehicle: [],
+      owner: [],
+      options: [],
       location: '',
-      message: '',
+      message: {
+        error: '',
+        succes: ''
+      },
       center: {lat: 10.0, lng: 10.0},
       markers: [
         {position: {lat: 10.0, lng: 10.0}}
-      ]
+      ],
+      headers: {
+        'header': {
+          'Access-Control-Allow-Origin': '*'
+        }
+      }
     }
+  },
+  created () {
+    var self = this
+    // get vehicles
+    api.get(`http://cmsdev.localhost/efiara/vehicles/${this.id}?_format=json`, {
+      'header': {
+        'Access-Control-Allow-Origin': '*'
+      }
+    })
+      .then(({data: response}) => {
+        this.vehicle = response
+        this.location = response.field_locatie[0].value
+        this.getOwner(response.field_eigenaar[0].url)
+        for (var i = 0; i < response.field_opties.length; i++) {
+          this.getOptions(response.field_opties[i].url)
+        }
+        geocoder.geocode(this.location)
+      })
+      .catch(({message: error}) => { this.message.error = error })
+    // geocoder
+    var geocoder = require('geocoder')
+    geocoder.geocode('Roeselare', function (err, data) {
+      if (err) {
+        console.log(err.stack)
+      }
+      self.center = data.results[0].geometry.location
+      // debugger
+      self.markers[0].position.lat = data.results[0].geometry.location.lat
+      self.markers[0].position.lng = data.results[0].geometry.location.lng
+    })
   },
   methods: {
     clickTab: function (tab) {
@@ -124,35 +175,34 @@ export default {
     },
     hire: function () {
       this.$router.push({name: 'Book'})
-    }
-  },
-  created () {
-    var self = this
-    // get vehicles
-    axios.get(`http://cmsdev.localhost/efiara/vehicles/${this.id}?_format=json`, {
-      'header': {
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-      .then(({data: response}) => {
-        this.vehicle = response
-        this.location = response.field_locatie[0].value
-        geocoder.geocode(this.location)
+    },
+    getOwner: function (url) {
+      axios.get(`http://cmsdev.localhost/` + url + `?_format=json`, {
+        'header': {
+          'Access-Control-Allow-Origin': '*'
+        }
       })
-      .catch(({message: error}) => { this.message = error })
-    // geocoder
-    var geocoder = require('geocoder')
-    geocoder.geocode('Roeselare', function (err, data) {
-      if (err) {
-        console.log(err.stack)
-      }
-      self.center = data.results[0].geometry.location
-      // debugger
-      self.markers[0].position.lat = data.results[0].geometry.location.lat
-      self.markers[0].position.lng = data.results[0].geometry.location.lng
-    })
+        .then(({data: response}) => {
+          axios.get(`http://cmsdev.localhost/` + response.field_gebruiker[0].url + `?_format=json`, {
+            'header': {
+              'Access-Control-Allow-Origin': '*'
+            }
+          })
+            .then(({data: response}) => { this.owner = response })
+            .catch(({message: error}) => { this.message.error += error })
+        })
+        .catch(({message: error}) => { this.message.error += error })
+    },
+    getOptions: function (url) {
+      axios.get(`http://cmsdev.localhost/` + url + `?_format=json`, {
+        'header': {
+          'Access-Control-Allow-Origin': '*'
+        }
+      })
+        .then(({data: response}) => { this.options = response })
+        .catch(({message: error}) => { this.message.error = error })
+    }
   }
-
 }
 </script>
 
