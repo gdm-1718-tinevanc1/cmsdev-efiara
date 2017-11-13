@@ -17,13 +17,13 @@
             v-for="(m, index) in markers"
             :position="m.position"
             :clickable="true"
-			:optimized="false",
+			      :optimized="false",
             :draggable="false"
             @click="center=m.position; getPoint($event)"
           ></gmap-marker>
         </gmap-map>
 
-        <div v-for="point in filterLocation">
+        <div :for="point in filterLocation">
             <div class="point">   
                  <table class="tableChargingpoints">
                 <tr>

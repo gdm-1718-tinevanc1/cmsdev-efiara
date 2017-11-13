@@ -50,6 +50,9 @@
             </table>
           <hr>
             <h4>Opties en accessoires </h4>
+            <ul :for="option in options">
+                <li>{{ option.name[0].value}}</li>
+            </ul>
       </div>
 
 
@@ -87,7 +90,7 @@
 
 <script>
 import axios from 'axios'
-import { setupCache } from 'axios-cache-adapter'
+// import { setupCache } from 'axios-cache-adapter'
 import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {
@@ -96,14 +99,13 @@ Vue.use(VueGoogleMaps, {
     libraries: 'places'
   }
 })
-const api = setupCache({
-  cache: {
-    maxAge: 15 * 60 * 1000
-  }
+/* const cache = setupCache({
+  maxAge: 15 * 60 * 1000
 })
+
 const api = axios.create({
   adapter: cache.adapter
-})
+}) */
 export default {
   beforeCreate: function () {
     document.body.className = 'background--white'
@@ -134,7 +136,7 @@ export default {
   created () {
     var self = this
     // get vehicles
-    api.get(`http://cmsdev.localhost/efiara/vehicles/${this.id}?_format=json`, {
+    axios.get(`http://cmsdev.localhost/efiara/vehicles/${this.id}?_format=json`, {
       'header': {
         'Access-Control-Allow-Origin': '*'
       }
@@ -144,9 +146,13 @@ export default {
         this.location = response.field_locatie[0].value
         this.getOwner(response.field_eigenaar[0].url)
         for (var i = 0; i < response.field_opties.length; i++) {
-          this.getOptions(response.field_opties[i].url)
+          this.getOptions(response.field_opties[i].url, i)
         }
         geocoder.geocode(this.location)
+
+        /* localStorage.setItem('vehicle_' + response.id[0].value, JSON.stringify(response))
+        var vehicle = JSON.parse(localStorage.getItem(`vehicle_${response.id[0].value}`))
+        console.log(vehicle) */
       })
       .catch(({message: error}) => { this.message.error = error })
     // geocoder
@@ -174,6 +180,7 @@ export default {
       document.getElementById(selectedElement).className += ' tabs__button--active'
     },
     hire: function () {
+      localStorage.setItem('Book_vehicle', this.vehicle.uuid[0].value)
       this.$router.push({name: 'Book'})
     },
     getOwner: function (url) {
@@ -193,13 +200,13 @@ export default {
         })
         .catch(({message: error}) => { this.message.error += error })
     },
-    getOptions: function (url) {
+    getOptions: function (url, i) {
       axios.get(`http://cmsdev.localhost/` + url + `?_format=json`, {
         'header': {
           'Access-Control-Allow-Origin': '*'
         }
       })
-        .then(({data: response}) => { this.options = response })
+        .then(({data: response}) => { this.options[i] = response })
         .catch(({message: error}) => { this.message.error = error })
     }
   }

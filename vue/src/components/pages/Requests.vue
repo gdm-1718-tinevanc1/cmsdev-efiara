@@ -2,7 +2,7 @@
   <div class="container">
      <div class="requests">
         <h4 class="title--page">Aanvragen</h4>
-        <div v-for="request in requests">
+        <div :for="request in requests">
            <div class="request">    
            <i class="fa fa-check request__check--pending" aria-hidden="true"></i>
               <p class="title--request">Volkswagen Jeta, Gent</p>  

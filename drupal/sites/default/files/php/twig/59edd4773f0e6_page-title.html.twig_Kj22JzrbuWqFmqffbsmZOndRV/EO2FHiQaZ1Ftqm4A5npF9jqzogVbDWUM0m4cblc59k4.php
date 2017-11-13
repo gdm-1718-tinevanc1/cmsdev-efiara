@@ -1,6 +1,6 @@
 <?php
 
-/* core/themes/classy/templates/content/page-title.html.twig */
+/* @classy/content/page-title.html.twig */
 class __TwigTemplate_13b86f2f82af26e43762e99878b5f045e66cc8e0a2c06778692a8f360baef8c3 extends Twig_Template
 {
     public function __construct(Twig_Environment $env)
@@ -61,7 +61,7 @@ class __TwigTemplate_13b86f2f82af26e43762e99878b5f045e66cc8e0a2c06778692a8f360ba
 
     public function getTemplateName()
     {
-        return "core/themes/classy/templates/content/page-title.html.twig";
+        return "@classy/content/page-title.html.twig";
     }
 
     public function isTraitable()
@@ -84,6 +84,6 @@ class __TwigTemplate_13b86f2f82af26e43762e99878b5f045e66cc8e0a2c06778692a8f360ba
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "core/themes/classy/templates/content/page-title.html.twig", "/Users/tine/Sites/cmsdev-efiara/drupal/core/themes/classy/templates/content/page-title.html.twig");
+        return new Twig_Source("", "@classy/content/page-title.html.twig", "/Users/tine/Sites/cmsdev-efiara/drupal/core/themes/classy/templates/content/page-title.html.twig");
     }
 }
