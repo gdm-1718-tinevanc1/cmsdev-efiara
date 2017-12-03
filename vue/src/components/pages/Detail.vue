@@ -15,7 +15,6 @@
              <a @click="clickTab('voorwaarden')" id="voorwaardenButton" class="tabs__button col s6">Voorwaarden</a>
              <a @click="clickTab('review')" id="reviewButton" class="tabs__button col s6">Review</a>
              <a @click="clickTab('kaart')" id="kaartButton" class="tabs__button col s6">Kaart</a>
-
         </div>
 
        <div id="details" class="tabview tabview—active">
@@ -50,14 +49,27 @@
             </table>
           <hr>
             <h4>Opties en accessoires </h4>
-            <ul :for="option in options">
+              <ul v-for="option in options">
                 <li>{{ option.name[0].value}}</li>
             </ul>
       </div>
 
 
        <div id="voorwaarden" class="tabview">
-       voorwaarden
+       <table class="tableDetail">
+                <tr>
+                  <td>Maximale verhuurdagen</td>
+                  <td>{{ vehicle.field_verhuurdagen[0].value}} dagen</td>
+                </tr>
+                <tr>
+                  <td>Maximale kilometers per dag</td>
+                  <td>{{ vehicle.field_kilometers_per_dag[0].value}} km/dag</td>
+                </tr>
+                <tr>
+                  <td>Minimum leeftijd</td>
+                  <td>{{ vehicle.field_min_leeftijd[0].value}} jaar</td>
+                </tr>
+            </table>
        </div>
 
        <div id="review" class="tabview">
@@ -67,7 +79,7 @@
        <div id="kaart" class="tabview">
         <gmap-map
           :center="center"
-          :zoom="13"
+          :zoom="7"
           map-type-id="terrain"
           style="width: 100%; height: 280px"
         >
@@ -76,14 +88,25 @@
             v-for="(m, index) in markers"
             :position="m.position"
             :clickable="true"
-            :draggable="true"
+			      :optimized="false",
+            :draggable="false"
             @click="center=m.position"
           ></gmap-marker>
         </gmap-map>
        </div>
       </div>
 
-      <div class="btn--primary--bottom"><a @click="hire">Dit voertuig huren</a></div>
+      <div v-if="checkAuthVehicle">
+        <div class="btn--primary--bottom">
+            <router-link :to="{ name: 'Menu', params: { id: this.id}}">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </router-link>
+
+        </div>
+      </div>
+      <div v-else="checkAuthVehicle">
+        <div class="btn--primary--bottom"><a @click="hire">Dit voertuig huren</a></div>
+      </div>
     </div>
 </template>
 
@@ -113,11 +136,12 @@ export default {
   name: 'detail',
   data: function () {
     return {
+      geocoder: require('geocoder'),
       id: this.$route.params.id,
       vehicle: [],
       owner: [],
       options: [],
-      location: '',
+      address: '',
       message: {
         error: '',
         succes: ''
@@ -125,47 +149,31 @@ export default {
       center: {lat: 10.0, lng: 10.0},
       markers: [
         {position: {lat: 10.0, lng: 10.0}}
-      ],
-      headers: {
-        'header': {
-          'Access-Control-Allow-Origin': '*'
-        }
-      }
+      ]
     }
   },
   created () {
     var self = this
+    window.shared.url.pathname = `efiara/vehicles/${this.id}`
     // get vehicles
-    axios.get(`http://cmsdev.localhost/efiara/vehicles/${this.id}?_format=json`, {
-      'header': {
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
+    axios.get(`${window.shared.url}?_format=json`)
       .then(({data: response}) => {
         this.vehicle = response
-        this.location = response.field_locatie[0].value
-        this.getOwner(response.field_eigenaar[0].url)
+        let address = response.field_locatie[0].value
         for (var i = 0; i < response.field_opties.length; i++) {
           this.getOptions(response.field_opties[i].url, i)
         }
-        geocoder.geocode(this.location)
-
-        /* localStorage.setItem('vehicle_' + response.id[0].value, JSON.stringify(response))
-        var vehicle = JSON.parse(localStorage.getItem(`vehicle_${response.id[0].value}`))
-        console.log(vehicle) */
+        this.getOwner(response.field_eigenaar[0].url)
+        this.geocoder.geocode(address, function (err, data) {
+          if (err) {
+            console.log(err.stack)
+          }
+          self.center = data.results[0].geometry.location
+          self.markers[0].position.lat = data.results[0].geometry.location.lat
+          self.markers[0].position.lng = data.results[0].geometry.location.lng
+        })
       })
       .catch(({message: error}) => { this.message.error = error })
-    // geocoder
-    var geocoder = require('geocoder')
-    geocoder.geocode('Roeselare', function (err, data) {
-      if (err) {
-        console.log(err.stack)
-      }
-      self.center = data.results[0].geometry.location
-      // debugger
-      self.markers[0].position.lat = data.results[0].geometry.location.lat
-      self.markers[0].position.lng = data.results[0].geometry.location.lng
-    })
   },
   methods: {
     clickTab: function (tab) {
@@ -180,34 +188,33 @@ export default {
       document.getElementById(selectedElement).className += ' tabs__button--active'
     },
     hire: function () {
-      localStorage.setItem('Book_vehicle', this.vehicle.uuid[0].value)
+      localStorage.setItem('Book_vehicleId', this.vehicle.id[0].value)
       this.$router.push({name: 'Book'})
     },
-    getOwner: function (url) {
-      axios.get(`http://cmsdev.localhost/` + url + `?_format=json`, {
-        'header': {
-          'Access-Control-Allow-Origin': '*'
-        }
-      })
-        .then(({data: response}) => {
-          axios.get(`http://cmsdev.localhost/` + response.field_gebruiker[0].url + `?_format=json`, {
-            'header': {
-              'Access-Control-Allow-Origin': '*'
-            }
-          })
-            .then(({data: response}) => { this.owner = response })
-            .catch(({message: error}) => { this.message.error += error })
-        })
+    getOwner: function (path) {
+      window.shared.url.pathname = path
+      axios.get(`${window.shared.url}?_format=json`)
+        .then(({data: response}) => { this.owner = response })
         .catch(({message: error}) => { this.message.error += error })
     },
-    getOptions: function (url, i) {
-      axios.get(`http://cmsdev.localhost/` + url + `?_format=json`, {
-        'header': {
-          'Access-Control-Allow-Origin': '*'
-        }
-      })
-        .then(({data: response}) => { this.options[i] = response })
-        .catch(({message: error}) => { this.message.error = error })
+    getOptions: function (path, i) {
+      window.shared.url.pathname = path
+      axios.get(`${window.shared.url}?_format=json`)
+        .then(({data: response}) => {
+          this.options[i] = response
+        })
+        .catch(({message: error}) => { this.message.error += error })
+    }
+  },
+  computed: {
+    checkAuthVehicle: function () {
+      let vehicleOwner = this.vehicle.field_eigenaar[0].target_id.toString()
+      let userId = localStorage.getItem('profileId')
+      if (vehicleOwner === userId) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

@@ -5,13 +5,14 @@
             <div v-for="vehicle in vehicles">
                 <div class="vehicle">            
                 <router-link :to="{ name: 'Detail' , params: { id: vehicle.id[0].value }}">
-                    <img :src="vehicle.field_afbeelding[0].url"> 
+                    <img v-if="vehicle.field_afbeelding.length" :src="vehicle.field_afbeelding[0].url"> 
                     <p class="price--big"><span class="big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
                     <p class="title">{{ vehicle.name[0].value}} {{ vehicle.field_model[0].value}},
                     {{ vehicle.field_locatie[0].value}}</p> 
                  </router-link>
                  </div>
-               {{message.error}}  
+              <div class="message--error">{{message.error}}</div>
+              <div class="message--succes">{{message.succes}}</div>
             </div>
         </div>
     </div>
@@ -36,11 +37,9 @@ export default {
     }
   },
   created () {
-    axios.get('http://cmsdev.localhost/vehicles?_format=json', {
-      'header': {
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
+    window.shared.url.pathname = `vehicles/place/${this.$route.params.place}`
+    // http://cmsdev.localhost/vehicles/place/Roeselare?_format=json
+    axios.get(`${window.shared.url}?_format=json`)
       .then(({data: response}) => { this.vehicles = response })
       .catch(({message: error}) => { this.message.error = error })
   }

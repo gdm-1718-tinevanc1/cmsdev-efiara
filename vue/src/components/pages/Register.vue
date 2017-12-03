@@ -28,9 +28,8 @@
            <label for="bday">Geboortedatum</label><br>
           <input name="bday" id="bday" type="date" placeholder="Geboortedatum" v-model="credentials.bday"><br>
            
-          <div class="message--error">{{message.error}}</div>
-          <div class="message--succes">{{message.succes}}</div>
-
+          <div class="message--error">{{user.message.error}}</div>
+          <div class="message--succes">{{user.message.succes}}</div>
 
 					 <div class="btn--login"><a @click="register()">Registeren</a></div>
            <div><router-link to="/login" exact><a class="link--login">Aanmelden</a> </router-link></div>
@@ -41,7 +40,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Auth from '../../auth.js'
 
 export default {
   beforeCreate: function () {
@@ -59,16 +58,13 @@ export default {
         phonenumber: '',
         password: ''
       },
-      message: {
-        error: '',
-        succes: ''
-      },
+      user: Auth.user,
       confirmPassword: ''
     }
   },
   methods: {
     register () {
-      axios.post(`http://cmsdev.localhost/user/register?_format=hal_json`, {
+      let creds = {
         'name': {
           'value': this.credentials.username
         },
@@ -90,8 +86,9 @@ export default {
         'pass': {
           'value': this.credentials.password
         }
-      }).then(response => { this.message.succes = 'Geregistreerd.' })
-        .catch(error => { this.message.error = error.response.data })
+      }
+
+      Auth.register(creds)
     }
   }
 }

@@ -3,15 +3,15 @@
      <div class="login">
         <img class="logo--big" src="../../assets/logo.png">
         <form class="form--login">
-          <label for="email">E-mailadres</label><br>
-          <input name="email" id="email" placeholder="E-mailadres" v-model="credentials.email"><br>
+          <label for="username">Gebruikersnaam</label><br>
+          <input name="username" id="username" placeholder="Gebruikersnaam" v-model="credentials.username"><br>
           <label for="password">Wachtwoord</label><br>
           <input name="password" id="password" type="password" placeholder="Wachtwoord" v-model="credentials.password"><br>
            <div class="btn--login"><a @click="login()">Aanmelden</a></div>
           <router-link to="/register" exact><a class="link--login">Registreren</a> </router-link>
         </form>
-        <div class="message--error">{{message.error}}</div>
-        <div class="message--succes">{{message.succes}}</div>
+        <div class="message--error">{{user.message.error}}</div>
+        <div class="message--succes">{{user.message.succes}}</div>
 
 
     </div>
@@ -19,8 +19,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-
+import Auth from '../../auth.js'
 export default {
   beforeCreate: function () {
     document.body.className = 'background--image'
@@ -29,31 +28,16 @@ export default {
   data () {
     return {
       credentials: {
-        email: '',
+        username: '',
         password: ''
       },
-      message: {
-        error: '',
-        succes: ''
-      }
+      user: Auth.user
     }
   },
   methods: {
     login () {
-      axios.post(`http://cmsdev.localhost/user/login?_format=hal_json`, {
-        '_links': {
-          'type': {
-            'href': 'http://cmsdev.localhost/rest/type/user/user'
-          }
-        },
-        'name': {
-          'value': 'root'
-        },
-        'pass': {
-          'value': 'secret'
-        }
-      }).then(response => { this.message.succes = 'Ingelogd.' })
-        .catch(error => { this.message.error = error.response.data })
+      let credentials = {'name': this.credentials.username, 'pass': this.credentials.password}
+      Auth.login(credentials)
     }
   }
 }

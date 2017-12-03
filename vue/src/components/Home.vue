@@ -4,24 +4,27 @@
         <img class="logo--big" src="../assets/logo.png">
         <form class="form--home">
           <label id="label--place">
-            <input type="text" id="place" placeholder="Plaats">
+            <input type="text" id="place" placeholder="Plaats" v-model="filter.place">
           </label><br>
 
           <label id="label--begindate">
-            <input id="begindate" placeholder="Begin datum">
+            <input id="begindate" placeholder="Begin datum" v-model="filter.begindate">
           </label><br>
 
           <label id="label--enddate">
-            <input id="enddate" placeholder="Eind datum">
+            <input id="enddate" placeholder="Eind datum" v-model="filter.enddate">
           </label><br>
 
-          <div class="btn--login"><router-link to="/overview" exact><a>Zoeken</a> </router-link></div>
+
+          <div class="btn--login"><router-link :to="{ name: 'Overview', params: { place: filter.place}}" exact><a>Zoeken</a> </router-link></div>
         </form>
     </div>
   </div>
 </template>
 
 <script>
+let md5 = require('js-md5')
+
 export default {
   beforeCreate: function () {
     document.body.className = 'background--image'
@@ -29,7 +32,17 @@ export default {
   name: 'home',
   data: function () {
     return {
+      filter: {
+        headers: window.shared.headers,
+        place: '',
+        begindate: '',
+        enddate: ''
+      }
     }
+  },
+  created () {
+    // window.shared.headers.auth
+    console.log(md5('test'))
   }
 }
 </script>

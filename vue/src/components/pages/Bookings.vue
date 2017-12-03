@@ -1,19 +1,25 @@
 <template>
   <div class="container">
      <div class="bookings">
+        <p style="display:none">{{vehicle}}</p>
         <div class="message--error">{{message.error}}</div>
         <div class="message--succes">{{message.succes}}</div>
-        <div v-for="booking in bookings">
-           <div class="request">  
-              <i class="fa fa-check request__check--pending" aria-hidden="true"></i>
-              <p class="title--request">{{booking.vehicle}}</p>  
-              <p class="bold request__adress">Gentsestraat 3 - Gent, België</p>       
+        <div v-for="booking in orderedBookings">
+           <div class="booking">  
+              <p class="booking__price"><span class="bold">€ {{booking.vehicle[0].field_prijs[0].value}} /dag</span></p>
+              <i class="fa fa-check request__check" v-bind:class="booking.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
+                <select @change="changeState(booking)" class="dropdown" v-model="booking.field_status[0].value">
+                  <option value="Geannuleerd">Geannuleerd</option>
+                  <option value="In afwachting">In afwachting</option>
+                  <option disabled="disabled" value="Goedgekeurd">Goedgekeurd</option>
+                  <option disabled="disabled" value="Afgekeurd">Afgekeurd</option>
+                </select>
+              </i>
+              <img class="image--booking" :src="booking.vehicle[0].field_afbeelding[0].url"> 
+              <p class="title--request">{{booking.vehicle[0].name[0].value}} {{booking.vehicle[0].field_model[0].value}}</p>  
+              <p class="bold request__adress">Gentsestraat 3 - {{booking.vehicle[0].field_locatie[0].value}}, België</p>       
               <p class="request__date">van <span class="bold">{{ booking.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ booking.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.field_eind_datum[0].value | date("%R")}}</span> </p>
-              <p class="request__price"><span class="bold"></span></p>
-             <!-- <p>{{request.field_status[0].value}}</p> -->
-
-             {{booking.field_voertuig[0].url}}
            </div>
         </div>
     </div>
@@ -22,6 +28,8 @@
 
 <script>
 import axios from 'axios'
+import * as _ from 'lodash'
+
 export default {
   beforeCreate: function () {
     document.body.className = 'background--image'
@@ -36,40 +44,68 @@ export default {
         error: '',
         succes: ''
       },
-      vehicle: []
+      vehicle: [],
+      profileId: localStorage.getItem('profileId')
     }
   },
   created () {
     // var self = this
-    axios.get('http://cmsdev.localhost/bookings?_format=json', {
-      'header': {
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
+    window.shared.url.pathname = `bookings/renter/${this.profileId}`
+    axios.get(`${window.shared.url}?_format=json`)
       .then(({data: response}) => {
-        this.bookings = response
-        for (var i = 0; i < this.bookings.length; i++) {
-          var url = this.bookings[i].field_voertuig[0].url
+        for (var i = 0; i < response.length; i++) {
+          var url = response[i].field_voertuig[0].url
           this.getVehicle(url, i)
         }
+        this.bookings = response
       })
       .catch(({message: error}) => { this.message.error = error })
   },
   methods: {
-    getVehicle: function (url, i) {
-      axios.get(`http://cmsdev.localhost/` + url + `?_format=json`, {
-        'header': {
-          'Access-Control-Allow-Origin': '*'
+    dropdown: function (event) {
+      let dropdown = event.target.getElementsByClassName('dropdown')
+      for (let i = 0; i < dropdown.length; i++) {
+        if (!dropdown[i].classList.contains('open')) {
+          dropdown[i].className += ' open'
+        } else {
+          dropdown[i].className = dropdown[i].className.replace(/\b open\b/g, '')
         }
-      })
+      }
+    },
+    getVehicle: function (path, i) {
+      let self = this
+      window.shared.url.pathname = path
+      axios.get(`${window.shared.url}?_format=json`)
         .then(({data: response}) => {
-          this.vehicle = new Array(response)
+          self.bookings[i].vehicle = [response]
+          self.vehicle = response
         })
-        .catch(({message: error}) => { this.message.error = error })
+        .catch(({message: error}) => { self.message.error = error })
+    },
+    changeState: function (booking) {
+      window.shared.url.pathname = `efiara/bookings/${booking.id[0].value}`
+      axios.patch(`${window.shared.url}?_format=hal_json`,
+        {
+          'field_status': {
+            'value': booking.field_status[0].value
+          }
+        }, window.shared.headers
+      )
+        .then(response => {
+          console.log('Status is aangepast')
+          let dropdown = document.getElementsByClassName('dropdown')
+          for (let i = 0; i < dropdown.length; i++) {
+            dropdown[i].className = dropdown[i].className.replace(/\b open\b/g, '')
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
-  watch: {
-    bookings: function (val) {
+  computed: {
+    orderedBookings: function () {
+      return _.orderBy(this.bookings, 'name[0].value')
     }
   }
 }

@@ -25,26 +25,52 @@
         font-size: 1.5rem;
         margin-top: -5px;
 
-        &--pending{
+        &.afwachting{
             @extend .request__check;  
-            color: #ffffff;          
-            text-shadow: 0px 0px 1px #000;
+            color: rgb(233, 233, 233);          
         }
-        &--approved{
+        &.Goedgekeurd{
             @extend .request__check;                        
-            text-shadow: 0px 0px 1px $primary-color;
             color: $primary-color;
         }
-        &--canceled{
+        &.Geannuleerd{
             @extend .request__check;                        
-            text-shadow: 0px 0px 1px #d3670f;
             color: #d3670f;
         }
-        &--disapproved{
+        &.Afgekeurd{
             @extend .request__check;                        
-            text-shadow: 0px 0px 1px #af0202;
             color: #af0202;
-        }
-        
+        }    
     }
 }
+
+.dropdown{
+    display: none;
+}
+
+.dropdown.open{
+    position: absolute;
+    z-index: 90;
+    background: #ffffff;
+    margin-top: 0;
+    margin-right: 30px;
+    right: 0;
+    display: block;
+    margin-top: 0;
+    border: solid 1px #000000;
+
+    li{
+        display: block;
+        color: #000;
+        text-shadow: none;
+        font-size: 1rem; 
+        padding: 10px;
+        text-align: right;
+        margin: 0;
+        
+        &.active{
+            background-color: $primary-color;
+        }
+    }
+}
+

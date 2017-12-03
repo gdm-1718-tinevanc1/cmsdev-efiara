@@ -1,0 +1,14 @@
+.image--booking{
+    width: 40%;
+    float: left;   
+    padding: 10px; 
+}
+
+.booking{
+    @extend .request;
+    height: 120px;
+}
+
+.booking__price{
+    font-size: 1.1rem;
+}

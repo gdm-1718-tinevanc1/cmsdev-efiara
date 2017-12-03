@@ -2,13 +2,22 @@
   <div class="container">
      <div class="book">
         <form class="form--book">
-        {{uuid}}
           <p class="bookVehicle">Voertuig</p>
           <label for="begindate">Begin datum</label><br>
-          <input name="begindate" id="begindate" placeholder="Begin datum"><br>
+          <input type="date" name="begindate" id="begindate" placeholder="Begin datum" v-model="data_book.startdate"><br>
+
+          <label for="begindate">Start uur</label><br>          
+          <input type="time" name="begintime" id="begintime" v-model="data_book.starttime">
+
           <label for="enddate">Eind datum</label><br>
-          <input name="enddate" id="enddate" placeholder="Eind datum"><br>
+          <input type="date" name="enddate" id="enddate" placeholder="Eind datum" v-model="data_book.enddate"><br>
+
+          <label for="begindate">Eind uur</label><br>          
+          <input type="time" name="endtime" id="endtime" v-model="data_book.endtime">
+
            <div class="btn--primary"><a @click="submit()">Huur dit voertuig nu!</a></div>
+           <div class="message--error">{{message.error}}</div>
+           <div class="message--succes">{{message.succes}}</div>
         </form>
     </div>
   </div>
@@ -24,169 +33,49 @@ export default {
   name: 'book',
   data () {
     return {
-      uuid: localStorage.getItem('Book_vehicle'),
+      vehicleId: localStorage.getItem('Book_vehicleId'),
+      userId: localStorage.getItem('profileId'),
       message: {
         error: '',
         succes: ''
       },
-      headers: {
-        'header': {
-          'Authorization': 'Basic ZWZpYXJhLXVzZXI6ZWZpYXJhLXBhc3M=',
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/hal+json',
-          'Accept': 'application/hal+json'
-        }
+      data_book: {
+        startdate: '',
+        starttime: '',
+        enddate: '',
+        endtime: '',
+        status: '',
+        renter: '',
+        vehicle: ''
       }
     }
   },
   methods: {
     submit: function () {
-      axios.post(`http://cmsdev.localhost/entity/bookings?_format=hal_json`, {
-        /* 'name': {
-          'value': '2017-11-03T22:00:00'
-        },
-        'field_eind_datum': {
-          'value': '2017-11-03T22:00:00'
-        },
-        '_embedded': {
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/field_huurder': [
-            {
-              'uuid': [
-                {
-                  'value': 'b7a38a5e-c813-41f4-a8ad-5a811a73ebd6'
-                }
-              ]
-            }
-          ],
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/field_voertuig': [
-            {
-              'uuid': [
-                {
-                  'value': '7f1b4236-e84e-472b-8f56-65a80cf3e540'
-                }
-              ]
-            }
-          ]
-        } */
-        '_links': {
-          'self': {
-            'href': 'http://cmsdev.localhost/efiara/bookings/5?_format=hal_json'
+      window.shared.url.pathname = 'entity/bookings'
+      axios.post(`${window.shared.url}?_format=hal_json`,
+        {
+          'name': {
+            'value': this.data_book.startdate + 'T' + this.data_book.starttime + ':00'
           },
-          'type': {
-            'href': 'http://cmsdev.localhost/rest/type/bookings/bookings'
+          'field_eind_datum': {
+            'value': this.data_book.enddate + 'T' + this.data_book.endtime + ':00'
           },
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/user_id': [
-            {
-              'href': 'http://cmsdev.localhost/user/1?_format=hal_json',
-              'lang': 'nl'
-            }
-          ],
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/field_huurder': [
-            {
-              'href': 'http://cmsdev.localhost/efiara/renter/2?_format=hal_json'
-            }
-          ],
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/field_voertuig': [
-            {
-              'href': 'http://cmsdev.localhost/efiara/vehicles/4?_format=hal_json'
-            }
-          ]
-        },
-        'langcode': [
-          {
-            'value': 'nl'
-          }
-        ],
-        '_embedded': {
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/user_id': [
-            {
-              '_links': {
-                'self': {
-                  'href': 'http://cmsdev.localhost/user/1?_format=hal_json'
-                },
-                'type': {
-                  'href': 'http://cmsdev.localhost/rest/type/user/user'
-                }
-              },
-              'uuid': [
-                {
-                  'value': 'fcbf956d-7918-46cf-a441-1871e15a6712'
-                }
-              ],
-              'lang': 'nl'
-            }
-          ],
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/field_huurder': [
-            {
-              '_links': {
-                'self': {
-                  'href': 'http://cmsdev.localhost/efiara/renter/2?_format=hal_json'
-                },
-                'type': {
-                  'href': 'http://cmsdev.localhost/rest/type/renter/renter'
-                }
-              },
-              'uuid': [
-                {
-                  'value': 'b7a38a5e-c813-41f4-a8ad-5a811a73ebd6'
-                }
-              ]
-            }
-          ],
-          'http://cmsdev.localhost/rest/relation/bookings/bookings/field_voertuig': [
-            {
-              '_links': {
-                'self': {
-                  'href': 'http://cmsdev.localhost/efiara/vehicles/4?_format=hal_json'
-                },
-                'type': {
-                  'href': 'http://cmsdev.localhost/rest/type/vehicles/vehicles'
-                }
-              },
-              'uuid': [
-                {
-                  'value': '7f1b4236-e84e-472b-8f56-65a80cf3e540'
-                }
-              ]
-            }
-          ]
-        },
-        'name': [
-          {
-            'value': '2017-11-03T22:00:00'
-          }
-        ],
-        'status': [
-          {
-            'value': true
-          }
-        ],
-        'created': [
-          {
-            'value': '2017-11-11T12:46:29+00:00',
-            'format': 'Y-m-d\\TH:i:sP'
-          }
-        ],
-        'changed': [
-          {
-            'value': '2017-11-11T12:46:29+00:00',
-            'format': 'Y-m-d\\TH:i:sP'
-          }
-        ],
-        'field_eind_datum': [
-          {
-            'value': '2017-11-03T22:00:00'
-          }
-        ],
-        'field_status': [
-          {
+          'field_status': {
             'value': 'In afwachting'
+          },
+          'field_huurder': {
+            'target_id': this.userId
+          },
+          'field_voertuig': {
+            'target_id': this.vehicleId
           }
-        ]
-      },
-      this.headers)
-        .then(response => { this.message.succes = 'Succevol geboekt' })
-        .catch(error => { this.message.error = error.response.data })
+        }, window.shared.headers
+      )
+        .then(({data: response}) => {
+          this.message.succes = 'U heeft succesvol geboekt'
+        })
+        .catch(({message: error}) => { this.message.error = error })
     }
   }
 }

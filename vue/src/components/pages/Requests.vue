@@ -1,15 +1,25 @@
 <template>
   <div class="container">
      <div class="requests">
+        <p style="display:none">{{vehicle}}</p>
         <h4 class="title--page">Aanvragen</h4>
-        <div :for="request in requests">
+        <div class="message--error">{{message.error}}</div>
+        <div class="message--succes">{{message.succes}}</div>
+        <div v-for="request in orderedRequests">
            <div class="request">    
-           <i class="fa fa-check request__check--pending" aria-hidden="true"></i>
-              <p class="title--request">Volkswagen Jeta, Gent</p>  
-              <p class="bold request__adress">Gentsestraat 3 - Gent, België</p>       
+              <i class="fa fa-check request__check" v-bind:class="request.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
+                <select @change="changeState(request)" class="dropdown" v-model="request.field_status[0].value">
+                  <option value="In afwachting">In afwachting</option>
+                  <option value="Goedgekeurd">Goedgekeurd</option>
+                  <option value="Afgekeurd">Afgekeurd</option>
+                  <option disabled="disabled" value="Geannuleerd">Geannuleerd</option>
+                </select>
+              </i>
+              <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p>  
+              <p class="bold request__adress">Gentsestraat 3 - {{request.vehicle[0].field_locatie[0].value}}, België</p>       
               <p class="request__date">van <span class="bold">{{ request.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ request.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.field_eind_datum[0].value | date("%R")}}</span> </p>
-              <p class="request__price"><span class="bold">€150/km</span></p>
+              <p class="request__price"><span class="bold">€ {{request.vehicle[0].field_prijs[0].value}}/km</span></p>
              <!-- <p>{{request.field_status[0].value}}</p> -->
            </div>
         </div>
@@ -18,6 +28,7 @@
 </template>
 
 <script>
+import * as _ from 'lodash'
 import axios from 'axios'
 
 export default {
@@ -27,19 +38,75 @@ export default {
   name: 'requests',
   data () {
     return {
-      requests: []
+      requests: {
+        vehicle: []
+      },
+      message: {
+        error: '',
+        succes: ''
+      },
+      vehicle: [],
+      profileId: localStorage.getItem('profileId')
     }
   },
   created () {
-    axios.get('http://cmsdev.localhost/bookings/?_format=hal_json', {
-      'header': {
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-      .then(({data: response}) => { this.requests = response })
-      .catch(({message: error}) => { this.message = error })
+    window.shared.url.pathname = `bookings/owner/${this.profileId}`
+    axios.get(`${window.shared.url}?_format=json`)
+      .then(({data: response}) => {
+        for (let i = 0; i < response.length; i++) {
+          var url = response[i].field_voertuig[0].url
+          this.getVehicle(url, i)
+        }
+        this.requests = response
+      })
+      .catch(({message: error}) => { this.message.error = error })
   },
   methods: {
+    dropdown: function (event) {
+      let dropdown = event.target.getElementsByClassName('dropdown')
+      for (let i = 0; i < dropdown.length; i++) {
+        if (!dropdown[i].classList.contains('open')) {
+          dropdown[i].className += ' open'
+        } else {
+          dropdown[i].className = dropdown[i].className.replace(/\b open\b/g, '')
+        }
+      }
+    },
+    getVehicle: function (path, i) {
+      let self = this
+      window.shared.url.pathname = path
+      axios.get(`${window.shared.url}?_format=json`)
+        .then(({data: response}) => {
+          self.requests[i].vehicle = [response]
+          self.vehicle = response
+        })
+        .catch(({message: error}) => { self.message.error = error })
+    },
+    changeState: function (request) {
+      window.shared.url.pathname = `efiara/bookings/${request.id[0].value}`
+      axios.patch(`${window.shared.url}?_format=hal_json`,
+        {
+          'field_status': {
+            'value': request.field_status[0].value
+          }
+        }, window.shared.headers
+      )
+        .then(response => {
+          console.log('Status is aangepast')
+          let dropdown = document.getElementsByClassName('dropdown')
+          for (let i = 0; i < dropdown.length; i++) {
+            dropdown[i].className = dropdown[i].className.replace(/\b open\b/g, '')
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  },
+  computed: {
+    orderedRequests: function () {
+      return _.orderBy(this.requests, 'name[0].value')
+    }
   }
 }
 </script>

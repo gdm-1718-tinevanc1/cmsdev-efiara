@@ -2,16 +2,16 @@
     <div class="container">
       <div class="menu">
           <div class="col box">
-            <router-link to="/vehicles/create/step1">Beschrijving</router-link>
+            <router-link :to="{ name: 'Edit_Step1', params: { id: this.$route.params.id}}">Beschrijving</router-link>
           </div>
           <div class="col s6 box left">
-              <router-link to="/vehicles/create/step2">Adres</router-link>
+              <router-link :to="{ name: 'Edit_Step2', params: { id: this.$route.params.id}}">Adres</router-link>
           </div>
           <div class="col s6 box right">
-              <router-link to="/vehicles/create/step3">Voorwaarden</router-link>
+              <router-link :to="{ name: 'Edit_Step3', params: { id: this.$route.params.id}}">Voorwaarden</router-link>
           </div>
             <div class="col box">
-                <router-link to="/vehicles/create/step4">Beschikbaarheid</router-link>
+              <router-link :to="{ name: 'Edit_Step4', params: { id: this.$route.params.id}}">Beschikbaarheid</router-link>
               </div>
         </div>
     </div>

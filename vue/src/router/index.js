@@ -40,7 +40,7 @@ export default new Router({
       component: Register
     },
     {
-      path: '/overview',
+      path: '/overview/:place',
       name: 'Overview',
       component: Overview
     },
@@ -70,7 +70,7 @@ export default new Router({
       component: Chargingpoints
     },
     {
-      path: '/profile',
+      path: '/profile/:id',
       name: 'Profile',
       component: Profile
     },
@@ -85,7 +85,7 @@ export default new Router({
       component: Requests
     },
     {
-      path: '/vehicles/create',
+      path: '/vehicles/edit/:id',
       name: 'Menu',
       component: Menu
     },
@@ -107,6 +107,26 @@ export default new Router({
     {
       path: '/vehicles/create/step4',
       name: 'Step4',
+      component: Step4
+    },
+    {
+      path: '/vehicles/edit/:id/step1',
+      name: 'Edit_Step1',
+      component: Step1
+    },
+    {
+      path: '/vehicles/edit/:id/step2',
+      name: 'Edit_Step2',
+      component: Step2
+    },
+    {
+      path: '/vehicles/edit/:id/step3',
+      name: 'Edit_Step3',
+      component: Step3
+    },
+    {
+      path: '/vehicles/edit/:id/step4',
+      name: 'Edit_Step4',
       component: Step4
     }
   ]

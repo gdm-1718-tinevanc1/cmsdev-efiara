@@ -1,10 +1,10 @@
 .form{
-  input{
+  input, select{
     height: 30px;
     width: calc(75% - 5px);
     padding-left: 5px;
     border: none;
-    color: $secondary-color;
+    color: #000000;
     margin: 5px 5px 12px 12.5%;
     border-radius: 4px;
   }
@@ -24,21 +24,21 @@
  
 .form--book, .form--profile, .form--create{
   @extend .form;
-  input{
+  input, select{
     background-color: #FAFAFA;
     border: 1px solid rgb(203, 205, 206);
   }
 }
 
 .form--profile, .form--create{
-  input{
+  input, select{
     height: 20px;    
   }
 }
 
 .form--home{
   @extend .form;
-  input{
+  input, select{
     height: 35px;
     width: calc(75% - 35px);
     padding-left: 35px;
