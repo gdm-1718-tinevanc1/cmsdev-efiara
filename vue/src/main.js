@@ -12,7 +12,13 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 import geolocation from 'weex-vue-geolocation'
 import vueFilter from 'vue-filter'
 import FullCalendar from 'vue-full-calendar'
+import VeeValidate, {Validator} from 'vee-validate'
+import messages from 'vee-validate/dist/locale/nl'
 
+Validator.addLocale(messages)
+const config = {
+  locale: 'nl'
+}
 // Vue.install(VueGeolocation)
 Vue.config.productionTip = false
 
@@ -30,6 +36,9 @@ Vue.use(VueGoogleMaps, {
     libraries: 'places'
   }
 })
+
+Vue.use(VeeValidate, config)
+Vue.use(vueFilter, geolocation, FullCalendar)
 
 const url = new URL('http://cmsdev.localhost/')
 const params = new URLSearchParams()
@@ -61,41 +70,8 @@ window.shared = {
 }
 
 export default {
-  /* vehicle: {
-    name: '',
-    field_model: '',
-    vehicle_country: '',
-    field_inschrijvingsjaar: '',
-    field_zitplaatsen: '',
-    field_deuren: '',
-    field_versnellingsbak: '',
-    field_kilometerstand: '',
-    consumption: '',
-    street: '',
-    number: '',
-    field_locatie: '',
-    country: '',
-    field_verhuurdagen: '',
-    field_min_leeftijd: '',
-    field_kilometers_per_dag: '',
-    field_prijs: ''
-  }, */
-  // newVehicle: null,
   checkCreateOrEdit (routeparams) {
     if ('id' in routeparams) {
-      /* let id = routeparams.id
-      window.shared.url.pathname = `efiara/vehicles/${id}`
-      axios.get(`${window.shared.url}?_format=json`, {
-        'header': {
-          'Access-Control-Allow-Origin': '*'
-        }
-      })
-        .then(({data: response}) => {
-          this.vehicle = response
-          console.log(this.vehicle)
-          return false
-        })
-        .catch(({message: error}) => { this.message.error = error }) */
       Requests.getVehicleId(routeparams.id)
       return false
     } else {
@@ -105,5 +81,3 @@ export default {
   }
 }
 /* url.pathname = 'test/1' */
-
-Vue.use(vueFilter, geolocation, FullCalendar)

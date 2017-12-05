@@ -1,3 +1,15 @@
-.message--error{
-    color: $error-color;
+.message{
+    text-align: center;
+    // text-transform: uppercase;
+    text-align: center;
+
+    &--error{
+        @extend .message;
+        color: $error-color;
+    }
+    
+    &--succes{
+        @extend .message;
+        color: #017514;
+    }
 }

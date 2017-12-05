@@ -13,6 +13,9 @@
           <label for="min_age">Minimum leeftijd</label><br>
           <input name="min_age" id="min_age" placeholder="Mimimum leeftijd" v-model="vehicle.data.field_min_leeftijd[0].value"><br>
 
+        <div class="message--error">{{message.error}}</div>
+        <div class="message--succes">{{message.succes}}</div>
+
         <div v-if="newVehicle">
             <div class="btn--primary"><a @click="next()"> Volgende</a></div>
           </div>

@@ -30,11 +30,7 @@ export default {
   // get vehicle edit 4x
   getVehicleId (id) {
     window.shared.url.pathname = `efiara/vehicles/${id}`
-    axios.get(`${window.shared.url}?_format=json`, {
-      'header': {
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
+    axios.get(`${window.shared.url}?_format=json`)
       .then(({data: response}) => { this.vehicle.data = response })
       .catch(({message: error}) => { this.message.error = error })
   },
@@ -42,7 +38,7 @@ export default {
   // get vehicle edit 4x
   patchVehicle (id, creds) {
     window.shared.url.pathname = `efiara/vehicles/${id}`
-    axios.patch(`${window.shared.url}?_format=hal_json`, creds)
+    axios.patch(`${window.shared.url}?_format=hal_json`, creds, window.shared.headers)
       .then(response => {
         this.message.succes = 'Je voertuig is aangepast'
       })

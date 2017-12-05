@@ -2,8 +2,6 @@
     <div class="container">
       <div class="step1">
         <h4 class="title--page">Beschrijving</h4>
-        <div class="message--error">{{message.error}}</div>
-           <div class="message--succes">{{message.succes}}</div>
         <form class="form--create">
 
           <label for="merk">Merk</label><br>
@@ -38,6 +36,9 @@
           <label for="verbruik">Verbruik</label><br>
           <input name="verbruik" id="verbruik" placeholder="Verbruik"><br>
 
+          <div class="message--error">{{message.error}}</div>
+          <div class="message--succes">{{message.succes}}</div>
+
           <div v-if="newVehicle">
             <div class="btn--primary"><a @click="next()"> Volgende</a></div>
           </div>
@@ -70,18 +71,7 @@ export default {
         error: ''
       },
       newVehicle: null,
-      vehicle: Requests.vehicle,
-      headers: {
-        auth: {
-          username: 'efiara-user',
-          password: 'efiara-pass'
-        },
-        'header': {
-          'Accept': 'application/hal+json',
-          'Content-Type': 'application/hal+json',
-          'Access-Control-Allow-Origin': '*'
-        }
-      }
+      vehicle: Requests.vehicle
     }
   },
   created: function () {
@@ -101,17 +91,54 @@ export default {
     save: function () {
       let creds = {
         'name': {
-          'value': 19
+          'value': this.vehicle.data.name[0].value
+        },
+        'field_model': {
+          'value': this.vehicle.data.field_model[0].value
+        },
+        'field_inschrijvingsjaar': {
+          'value': this.vehicle.data.field_inschrijvingsjaar[0].value
+        },
+        'field_zitplaatsen': {
+          'value': this.vehicle.data.field_zitplaatsen[0].value
+        },
+        'field_deuren': {
+          'value': this.vehicle.data.field_deuren[0].value
+        },
+        'field_versnellingsbak': {
+          'value': this.vehicle.data.field_versnellingsbak[0].value
+        },
+        'field_kilometerstand': {
+          'value': this.vehicle.data.field_kilometerstand[0].value
         }
+        /*
+        'field_locatie': {
+          'value': vehicle.data.field_locatie[0].value
+        }
+
+        'field_verhuurdagen': {
+          'value': vehicle.data.field_verhuurdagen[0].value
+        },
+        'field_min_leeftijd': {
+          'value': vehicle.data.field_min_leeftijd[0].value
+        },
+        'field_kilometers_per_dag': {
+          'value': vehicle.data.field_kilometers_per_dag[0].value
+        }
+
+        'field_prijs': {
+          'value': vehicle.data.field_prijs[0].value
+        }
+        */
       }
       // Requests.patchVehicle(this.$route.params.id, creds)
       window.shared.url.pathname = `efiara/vehicles/${this.$route.params.id}`
-      axios.patch(`${window.shared.url}?_format=hal_json`, creds, this.headers)
+      axios.patch(`${window.shared.url}?_format=hal_json`, creds, window.shared.headers)
         .then(response => {
           this.message.succes = 'Je voertuig is aangepast'
         })
         .catch(error => {
-          this.message.error = error
+          this.message.error = error.response.data.message
         })
     }
   },

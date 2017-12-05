@@ -23,8 +23,6 @@
 </template>
 
 <script>
-let md5 = require('js-md5')
-
 export default {
   beforeCreate: function () {
     document.body.className = 'background--image'
@@ -33,16 +31,11 @@ export default {
   data: function () {
     return {
       filter: {
-        headers: window.shared.headers,
         place: '',
         begindate: '',
         enddate: ''
       }
     }
-  },
-  created () {
-    // window.shared.headers.auth
-    console.log(md5('test'))
   }
 }
 </script>

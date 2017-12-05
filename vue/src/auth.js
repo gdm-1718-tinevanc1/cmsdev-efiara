@@ -1,5 +1,6 @@
 import router from './router/index'
 import axios from 'axios'
+let md5 = require('js-md5')
 
 export default{
   user: {
@@ -33,15 +34,14 @@ export default{
         this.user.authenticated = true
         localStorage.setItem('profileId', this.user.user.current_user.uid)
         // console.log(this.user.user.current_user.uid)
+        let authToken = md5(this.user.user.current_user.name, ':', creds.pass)
+
         window.shared.headers = {
-          auth: {
-            username: this.user.user.current_user.name,
-            password: creds.pass
-          },
           'header': {
             'Accept': 'application/hal+json',
             'Content-Type': 'application/hal+json',
-            'X-CSRF-Token': this.user.user.csrf_token
+            'X-CSRF-Token': this.user.user.csrf_token,
+            'Authorization': `Basic ${authToken}`
           }
         }
         router.push({name: 'Home'})

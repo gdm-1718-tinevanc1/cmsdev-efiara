@@ -15,9 +15,14 @@
           <label for="begindate">Eind uur</label><br>          
           <input type="time" name="endtime" id="endtime" v-model="data_book.endtime">
 
-           <div class="btn--primary"><a @click="submit()">Huur dit voertuig nu!</a></div>
            <div class="message--error">{{message.error}}</div>
            <div class="message--succes">{{message.succes}}</div>
+           
+           <div class="btn--primary"><a @click="submit()">Huur dit voertuig nu!</a></div>
+
+          <div v-for="date in vehicle.field_beschikbaar">
+          {{date.value}}
+          </div>
         </form>
     </div>
   </div>
@@ -35,6 +40,7 @@ export default {
     return {
       vehicleId: localStorage.getItem('Book_vehicleId'),
       userId: localStorage.getItem('profileId'),
+      vehicle: [],
       message: {
         error: '',
         succes: ''
@@ -49,6 +55,13 @@ export default {
         vehicle: ''
       }
     }
+  },
+  created () {
+    window.shared.url.pathname = `efiara/vehicles/${localStorage.getItem('Book_vehicleId')}`
+    console.log(window.shared.url)
+    axios.get(`${window.shared.url}?_format=hal_json`)
+      .then(({data: response}) => { this.vehicle = response })
+      .catch(({message: error}) => { this.message.error = error })
   },
   methods: {
     submit: function () {

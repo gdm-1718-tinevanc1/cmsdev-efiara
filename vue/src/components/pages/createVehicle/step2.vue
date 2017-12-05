@@ -16,6 +16,9 @@
           <label for="Land">Land</label><br>
           <input name="Land" id="Land" placeholder="Land" v-model="vehicle.country"><br>
 
+          <div class="message--error">{{message.error}}</div>
+          <div class="message--succes">{{message.succes}}</div>
+
           <div v-if="newVehicle">
             <div class="btn--primary"><a @click="next()"> Volgende</a></div>
           </div>
