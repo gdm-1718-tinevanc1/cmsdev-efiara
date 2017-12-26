@@ -14,11 +14,21 @@
               <router-link :to="{ name: 'Edit_Step4', params: { id: this.$route.params.id}}">Beschikbaarheid</router-link>
               </div>
         </div>
+        <div class="message--error">{{message.error}}</div>
+        <div class="message--succes">{{message.succes}}</div>
+
+        <div v-if="!newVehicle">
+          <div class="btn--error"><a @click="deleteVehicle()">Verwijder</a></div>
+        </div> 
     </div>
 </template>
 
 
 <script>
+import axios from 'axios'
+import Main from '../../../main.js'
+import Requests from '../../../requests.js'
+
 export default {
   beforeCreate: function () {
     document.body.className = 'background--image'
@@ -26,6 +36,34 @@ export default {
   name: 'menu',
   data: function () {
     return {
+      newVehicle: null,
+      vehicleId: this.$route.params.id,
+      message: {
+        succes: '',
+        error: ''
+      },
+      vehicle: Requests.vehicle
+    }
+  },
+  created: function () {
+    this.newVehicle = Main.checkCreateOrEdit(this.$route.params)
+  },
+  methods: {
+    deleteVehicle: function () {
+      if (confirm(`Ben je zeker dat je '${this.vehicle.data.name[0].value}' wilt verwijderen?`)) {
+        window.shared.url.pathname = `efiara/vehicles/${this.vehicleId}`
+        axios.delete(`${window.shared.url}?_format=hal_json`, window.shared.headers)
+          .then(({data: response}) => {
+            this.message.succes = 'Je voertuig is verwijderd!'
+            this.$router.push({name: 'MyVehicles'})
+          })
+          .catch(({message: error}) => { this.message.error = error })
+      }
+    }
+  },
+  watch: {
+    '$route.params' (newParams) {
+      this.newVehicle = Main.checkCreateOrEdit(newParams)
     }
   }
 }

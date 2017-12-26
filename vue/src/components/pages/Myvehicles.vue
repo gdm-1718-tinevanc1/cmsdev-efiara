@@ -2,6 +2,10 @@
     <div class="container">
         <div>
             <h5>Mijn voertuigen:</h5>
+            <div v-if="vehicles.length == 0">Je hebt nog geen voertuigen toegevoegd!
+              <router-link to="//vehicles/create/step1" exact><a class="link--login">Voertuig toevoegen</a> </router-link>
+            </div>
+
             <div v-for="vehicle in vehicles">
                 <div class="vehicle">             
                 <router-link :to="{ name: 'Detail', params: { id: vehicle.id[0].value }}">

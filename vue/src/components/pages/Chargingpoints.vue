@@ -3,6 +3,7 @@
      <div class="chargingpoints">
      <div class="message--error">{{message.error}}</div>
      <div class="message--succes">{{message.succes}}</div>
+     <div v-if="chargingpoints.length == 0">Er zijn geen laadpunten beschikbaar!</div>
      <label id="label--search">
         <input class="input--location" name="location" id="location" 
         placeholder="Plaats" @keyup.enter="getLocation" v-model="searchLocation"><br>

@@ -37,6 +37,10 @@ export default{
         let authToken = md5(this.user.user.current_user.name, ':', creds.pass)
 
         window.shared.headers = {
+          auth: {
+            username: this.user.user.current_user.name,
+            password: creds.pass
+          },
           'header': {
             'Accept': 'application/hal+json',
             'Content-Type': 'application/hal+json',

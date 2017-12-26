@@ -5,47 +5,59 @@
         <form class="form--create">
 
           <label for="merk">Merk</label><br>
-          <input name="merk" id="merk" placeholder="Merk" v-model="vehicle.data.name[0].value"><br>
+          <input v-validate="'required'" name="merk" id="merk" placeholder="Merk" v-model="vehicle.data.name[0].value"><br>
 
           <label for="model">Model</label><br>
-          <input name="model" id="model" placeholder="Model" v-model="vehicle.data.field_model[0].value"><br>
+          <input v-validate="'required'" name="model" id="model" placeholder="Model" v-model="vehicle.data.field_model[0].value"><br>
 
-          <label for="geboortedatum">Land van inschrijving</label><br>
-          <input name="geboortedatum" id="geboortedatum" placeholder="Land van inschrijving"><br>
+          <label for="landinschrijving">Land van inschrijving</label><br>
+          <input name="landinschrijving" id="landinschrijving" placeholder="Land van inschrijving"><br>
 
           <label for="inschrijvingsjaar">Jaar inschrijving</label><br>
-          <input name="inschrijvingsjaar" id="inschrijvingsjaar" placeholder="Jaar inschrijving" v-model="vehicle.data.field_inschrijvingsjaar[0].value"><br>
+          <input v-validate="'required|year'" name="inschrijvingsjaar" id="inschrijvingsjaar" placeholder="Jaar inschrijving" v-model="vehicle.data.field_inschrijvingsjaar[0].value"><br>
 
           <h5>Kenmerken</h5>
           <label for="zitplaatsen">Aantal zitplaatsen</label><br>
-          <input name="zitplaatsen" id="zitplaatsen" placeholder="Aantal zitplaatsen" v-model="vehicle.data.field_zitplaatsen[0].value"><br>
+          <input v-validate="'required|numeric'" name="zitplaatsen" id="zitplaatsen" placeholder="Aantal zitplaatsen" v-model="vehicle.data.field_zitplaatsen[0].value"><br>
 
           <label for="deuren">Aantal deuren</label><br>
-          <input name="deuren" id="deuren" placeholder="Aantal deuren" v-model="vehicle.data.field_deuren[0].value"><br>
+          <input v-validate="'required|numeric'" name="deuren" id="deuren" placeholder="Aantal deuren" v-model="vehicle.data.field_deuren[0].value"><br>
 
           <label for="versnellingsbak">Versnellingsbak</label><br>
-          <select name="versnellingsbak" id="versnellingsbak" v-model="vehicle.data.field_versnellingsbak[0].value">
+          <select name="versnellingsbak" id="versnellingsbak" v-validate="'required'" v-model="vehicle.data.field_versnellingsbak[0].value">
             <option value="" disabled selected>Versnellingsbak</option>
             <option value="Handmatig">Handmatig</option>
             <option value="Automatic">Automatic</option>
           </select>
 
           <label for="kilometers">Aantal totale kilometers</label><br>
-          <input name="kilometers" id="kilometers" placeholder="Aantal totale kilometers" v-model="vehicle.data.field_kilometerstand[0].value"><br>
+          <input name="kilometers" v-validate="'required|numeric'" id="kilometers" placeholder="Aantal totale kilometers" v-model="vehicle.data.field_kilometerstand[0].value"><br>
 
           <label for="verbruik">Verbruik</label><br>
-          <input name="verbruik" id="verbruik" placeholder="Verbruik"><br>
+          <input name="verbruik" v-validate="'required|numeric'" id="verbruik" placeholder="Verbruik"><br>
 
-          <div class="message--error">{{message.error}}</div>
           <div class="message--succes">{{message.succes}}</div>
 
-          <div v-if="newVehicle">
-            <div class="btn--primary"><a @click="next()"> Volgende</a></div>
+          <div class="message--error"> <br>
+            <ul v-for="error in errors.all()">
+              <li>{{error}}</li>
+            </ul>
+            <span v-if="!errors.any()">
+              {{message.error}}
+            </span>
           </div>
 
-          <div v-else="newVehicle">
-            <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
-          </div> 
+          <!-- component? -->  
+          <div v-if="this.$validator.validateAll()">
+            <div v-if="newVehicle">
+              <div class="btn--primary"><a @click="next()"> Volgende</a></div>
+            </div>
+
+            <div v-else="newVehicle">
+              <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
+            </div> 
+          </div>
+          <!-- component? -->  
 
            <!-- to="/vehicles/create/step2" -->
         </form>

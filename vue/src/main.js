@@ -14,6 +14,7 @@ import vueFilter from 'vue-filter'
 import FullCalendar from 'vue-full-calendar'
 import VeeValidate, {Validator} from 'vee-validate'
 import messages from 'vee-validate/dist/locale/nl'
+import VueCarousel from 'vue-carousel'
 
 Validator.addLocale(messages)
 const config = {
@@ -37,6 +38,7 @@ Vue.use(VueGoogleMaps, {
   }
 })
 
+Vue.use(VueCarousel)
 Vue.use(VeeValidate, config)
 Vue.use(vueFilter, geolocation, FullCalendar)
 

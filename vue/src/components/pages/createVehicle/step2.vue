@@ -11,7 +11,7 @@
           <input name="nummer" id="nummer" placeholder="Nummer" type="number" v-model="vehicle.number"><br>
 
           <label for="plaats">Plaats</label><br>
-          <input name="plaats" id="plaats" placeholder="Plaats" v-model="vehicle.data.field_locatie[0].value"><br>
+          <input name="plaats" v-validate="'required'" id="plaats" placeholder="Plaats" v-model="vehicle.data.field_locatie[0].value"><br>
 
           <label for="Land">Land</label><br>
           <input name="Land" id="Land" placeholder="Land" v-model="vehicle.country"><br>
@@ -19,13 +19,27 @@
           <div class="message--error">{{message.error}}</div>
           <div class="message--succes">{{message.succes}}</div>
 
-          <div v-if="newVehicle">
-            <div class="btn--primary"><a @click="next()"> Volgende</a></div>
+          <div class="message--error"> <br>
+            <ul v-for="error in errors.all()">
+              <li>{{error}}</li>
+            </ul>
+            <span v-if="!errors.any()">
+              {{message.error}}
+            </span>
           </div>
 
-          <div v-else="newVehicle">
-            <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
-          </div> 
+          <!-- component? -->  
+          <div v-if="this.$validator.validateAll()">
+            <div v-if="newVehicle">
+              <div class="btn--primary"><a @click="next()"> Volgende</a></div>
+            </div>
+
+            <div v-else="newVehicle">
+              <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
+            </div> 
+          </div>
+          <!-- component? -->  
+
         </form>
       </div>
     </div>

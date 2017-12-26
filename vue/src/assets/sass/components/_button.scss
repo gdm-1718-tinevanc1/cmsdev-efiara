@@ -23,11 +23,16 @@
             bottom: 10px; 
         }
     }
-    &--login{
+    &--login {
         @extend .btn;
         //position: relative;
         //left:0;
-      } 
+    }
+    &--error {
+        @extend .btn;
+        background-color: $error-color;
+    } 
+
   }
 
 

@@ -40,7 +40,7 @@ export default new Router({
       component: Register
     },
     {
-      path: '/overview/:place',
+      path: '/overview/:place&:startdate&:enddate',
       name: 'Overview',
       component: Overview
     },

@@ -5,6 +5,8 @@
         <h4 class="title--page">Aanvragen</h4>
         <div class="message--error">{{message.error}}</div>
         <div class="message--succes">{{message.succes}}</div>
+        <div v-if="requests.length == 0">Men heeft jouw voertuigen nog niet geboekt!</div>
+
         <div v-for="request in orderedRequests">
            <div class="request">    
               <i class="fa fa-check request__check" v-bind:class="request.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
@@ -16,7 +18,7 @@
                 </select>
               </i>
               <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p>  
-              <p class="bold request__adress">Gentsestraat 3 - {{request.vehicle[0].field_locatie[0].value}}, België</p>       
+              <p class="bold request__adress">{{booking.vehicle[0].field_straat[0].value}} {{booking.vehicle[0].field_huisnummer[0].value}} - {{booking.vehicle[0].field_locatie[0].value}}, {{booking.vehicle[0].field_land[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ request.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ request.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.field_eind_datum[0].value | date("%R")}}</span> </p>
               <p class="request__price"><span class="bold">€ {{request.vehicle[0].field_prijs[0].value}}/km</span></p>

@@ -4,8 +4,12 @@
           <div class="message--error">{{message.error}}</div>
           <div class="message--succes">{{message.succes}}</div>
 
-              <img :src="vehicle.field_afbeelding[0].url"> 
-              <p class="price--big"><span class="price big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
+              <agile>     
+                  <div class="slide" v-if="vehicle.field_afbeelding.length"  v-for="image in vehicle.field_afbeelding">
+                      <img class="detail__image" :src="image.url"> 
+                  </div>
+              </agile>
+              <p class="price--big--detail"><span class="price big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
               <p class="location">{{ vehicle.field_locatie[0].value}}</p> 
               <p class="owner">{{ owner.name[0].value}}</p> 
               <p class="clear"></p>
@@ -112,10 +116,13 @@
 
 
 <script>
-import axios from 'axios'
-// import { setupCache } from 'axios-cache-adapter'
 import Vue from 'vue'
+import axios from 'axios'
+import VueAgile from 'vue-agile'
+// import { setupCache } from 'axios-cache-adapter'
 import * as VueGoogleMaps from 'vue2-google-maps'
+Vue.use(VueAgile)
+
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDeyj-ODZCNmRRJbjgmIQKOKgE4Bin0zBg',
@@ -134,6 +141,7 @@ export default {
     document.body.className = 'background--white'
   },
   name: 'detail',
+  components: {},
   data: function () {
     return {
       geocoder: require('geocoder'),
@@ -222,4 +230,5 @@ export default {
 
 
 <style lang="scss">
+
 </style>

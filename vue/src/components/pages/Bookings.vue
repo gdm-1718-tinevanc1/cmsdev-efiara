@@ -4,6 +4,8 @@
         <p style="display:none">{{vehicle}}</p>
         <div class="message--error">{{message.error}}</div>
         <div class="message--succes">{{message.succes}}</div>
+        <div v-if="bookings.length == 0">Je hebt nog geen voertuig geboekt!</div>
+
         <div v-for="booking in orderedBookings">
            <div class="booking">  
               <p class="booking__price"><span class="bold">€ {{booking.vehicle[0].field_prijs[0].value}} /dag</span></p>
@@ -17,7 +19,7 @@
               </i>
               <img class="image--booking" :src="booking.vehicle[0].field_afbeelding[0].url"> 
               <p class="title--request">{{booking.vehicle[0].name[0].value}} {{booking.vehicle[0].field_model[0].value}}</p>  
-              <p class="bold request__adress">Gentsestraat 3 - {{booking.vehicle[0].field_locatie[0].value}}, België</p>       
+              <p class="bold request__adress">{{booking.vehicle[0].field_straat[0].value}} {{booking.vehicle[0].field_huisnummer[0].value}} - {{booking.vehicle[0].field_locatie[0].value}}, {{booking.vehicle[0].field_land[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ booking.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ booking.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.field_eind_datum[0].value | date("%R")}}</span> </p>
            </div>

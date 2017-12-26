@@ -5,7 +5,7 @@
           <form class="form--create">
             <h5>Prijs</h5>
             <label for="prijs">Prijs per kilometer</label><br>
-            <input name="prijs" id="prijs" placeholder="Prijs per kilometer" v-model="vehicle.data.field_prijs[0].value"><br>
+            <input name="prijs" v-validate="'required|numeric|1-20'" id="prijs" placeholder="Prijs per kilometer" v-model="vehicle.data.field_prijs[0].value"><br>
 
             <h5>Kalander</h5>
             <full-calendar :events="events"></full-calendar>
@@ -13,13 +13,24 @@
            <div class="message--error">{{message.error}}</div>
            <div class="message--succes">{{message.succes}}</div>
 
-          <div v-if="newVehicle">
-            <div class="btn--primary"><a @click="submit()">Toevoegen</a></div>
+          <div class="message--error"> <br>
+            <ul v-for="error in errors.all()">
+              <li>{{error}}</li>
+            </ul>
+            <span v-if="!errors.any()">
+              {{message.error}}
+            </span>
           </div>
 
-          <div v-else="newVehicle">
-            <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
-          </div> 
+          <div v-if="this.$validator.validateAll()">
+            <div v-if="newVehicle">
+              <div class="btn--primary"><a @click="submit()">Toevoegen</a></div>
+            </div>
+
+            <div v-else="newVehicle">
+              <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
+            </div> 
+          </div>
           </form>
       </div>
     </div>
@@ -74,12 +85,41 @@ export default {
   },
   created () {
     this.newVehicle = Main.checkCreateOrEdit(this.$route.params)
+
+    axios.post('http://cmsdev.localhost/entity/file?_format=json', {
+      '_links':
+        {
+          'type': {'href': 'http://cmsdev.localhost/rest/type/file/file'}
+        },
+      'filename': [{'value': 'input.jpg'}],
+      'filemime': [{'value': 'image/jpeg'}],
+      'data': [{'value': 'insert-output-from-base64-here'}]
+    })
+      .then(({data: response}) => {
+        this.message.succes = 'Jouw voertuig is succesvol toegevoegd'
+      })
+      .catch((error) => { this.message.error = error.response.data.message })
   },
   methods: {
     refreshEvents () {
       this.$refs.calendar.$emit('render-event(event)')
     },
     submit: function () {
+      axios.post('http://cmsdev.localhost/entity/file?_format=json', {
+        '_links':
+          {
+            'type': {'href': 'http://cmsdev.localhost/rest/type/file/file'}
+          },
+        'filename': [{'value': 'input.jpg'}],
+        'filemime': [{'value': 'image/jpeg'}],
+        'data': [{'value': 'insert-output-from-base64-here'}]
+      })
+        .then(({data: response}) => {
+          this.message.succes = 'Jouw voertuig is succesvol toegevoegd'
+        })
+        .catch((error) => { this.message.error = error.response.data.message })
+    }
+    /*
       window.shared.create_vehicle.price = this.vehicle.data.field_prijs[0].value
       window.shared.url.pathname = 'entity/vehicles'
       axios.post(`${window.shared.url}?_format=hal_json`,
@@ -132,7 +172,7 @@ export default {
           this.message.succes = 'Jouw voertuig is succesvol toegevoegd'
         })
         .catch((error) => { this.message.error = error.response.data.message })
-    }
+    } */
   },
   watch: {
     '$route.params' (newParams) {

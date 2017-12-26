@@ -1,0 +1,25 @@
+.agile__dots{
+   display: block;
+   float: right;
+   position: relative;
+   margin-top: -30px;
+
+   &:after{
+       clear: both;
+   }
+
+   .agile__dot{
+        width: 10px;
+        height: 10px;
+
+        & button{
+            padding-top: 100%;
+            border-radius: 50%;
+        }
+    }
+
+   .agile__dot--current button{
+       background-color: #000000
+   }
+
+}

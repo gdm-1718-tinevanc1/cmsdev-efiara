@@ -15,12 +15,13 @@
     font-weight: bold;
     font-size: 1.2rem;
     float: left;
+    margin-top: 10px;
 }
 
 .owner{
     float: right;
+    margin-top: 10px;
 }
-
 
 .price{
     font-size:1.2rem;
@@ -32,5 +33,17 @@
         z-index: 999;
         margin-top: -45px;
         padding-left: 5px;
+
+        &--detail{
+            @extend .price--big;
+            margin-top: -65px;
+            z-index: 99;
+            width: 50%;
+            position: relative;
+        }
     }
+}
+
+.detail__image{
+   margin-bottom: -20px;
 }

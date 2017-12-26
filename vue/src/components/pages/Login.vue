@@ -11,7 +11,7 @@
           <router-link to="/register" exact><a class="link--login">Registreren</a> </router-link>
         </form>
 
-        <div class="message--error"> <br>
+        <div class="message--error">
           <ul v-for="error in errors.all()">
               <li>{{error}}</li>
             </ul>
