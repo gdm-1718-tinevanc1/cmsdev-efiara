@@ -26,7 +26,6 @@
 
 <script>
 import axios from 'axios'
-
 export default {
   beforeCreate: function () {
     document.body.className = 'background--image'
@@ -43,9 +42,9 @@ export default {
     }
   },
   created () {
-    window.shared.url.pathname = `vehicles/owner/${this.profileId}`
-    console.log(window.shared.url)
-    axios.get(`${window.shared.url}`)
+    this.$store.state.url.pathname = `vehicles/owner/${this.profileId}`
+    console.log(this.$store.url)
+    axios.get(`${this.$store.state.url}`)
       .then(({data: response}) => { this.vehicles = response })
       .catch(({message: error}) => { this.message.error = error })
   }

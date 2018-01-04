@@ -1,5 +1,7 @@
 import router from './router/index'
 import axios from 'axios'
+import { store } from '../src/main.js'
+
 let md5 = require('js-md5')
 
 export default{
@@ -15,20 +17,9 @@ export default{
   credsLogin: {},
   vehicle: [],
 
-  getVehicleId (id) {
-    window.shared.url.pathname = `efiara/vehicles/${id}`
-    axios.get(`${window.shared.url}?_format=json`, {
-      'header': {
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-      .then(({data: response}) => { this.vehicle = response })
-      .catch(({message: error}) => { this.message.error = error })
-  },
-
   login (creds) {
-    window.shared.url.pathname = 'user/login'
-    axios.post(`${window.shared.url}?_format=hal_json`, creds)
+    store.state.url.pathname = 'user/login'
+    axios.post(`${store.state.url}?_format=hal_json`, creds)
       .then(response => {
         this.user.user = response.data
         this.user.authenticated = true
@@ -36,7 +27,7 @@ export default{
         // console.log(this.user.user.current_user.uid)
         let authToken = md5(this.user.user.current_user.name, ':', creds.pass)
 
-        window.shared.headers = {
+        store.state.headers = {
           auth: {
             username: this.user.user.current_user.name,
             password: creds.pass
@@ -48,9 +39,13 @@ export default{
             'Authorization': `Basic ${authToken}`
           }
         }
-        router.push({name: 'Home'})
+        router.go(-1)
+        // router.push({name: 'Home'})
       })
-      .catch(error => { this.user.message.error = error.response.data.message })
+      .catch(({message: error}) => {
+        alert('test')
+        this.user.message.error = error
+      })
   },
 
   logout () {
@@ -61,9 +56,9 @@ export default{
   },
 
   register (creds) {
-    window.shared.url.pathname = 'user/register'
+    this.$store.state.url.pathname = 'user/register'
     this.credsLogin = creds
-    axios.post(`${window.shared.url}?_format=hal_json`, creds)
+    axios.post(`${this.$store.url}?_format=hal_json`, creds)
       .then(response => {
         // this.message.succes = 'Geregistreerd.'
         let credentials = {'name': this.credsLogin.name.value, 'pass': this.credsLogin.pass.value}

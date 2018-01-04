@@ -10,15 +10,18 @@
         <div v-for="request in orderedRequests">
            <div class="request">    
               <i class="fa fa-check request__check" v-bind:class="request.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
-                <select @change="changeState(request)" class="dropdown" v-model="request.field_status[0].value">
+                <select v-if="request.field_status[0].value !== 'Geannuleerd'" 
+                @change="changeState(request)" class="dropdown" v-model="request.field_status[0].value">
                   <option value="In afwachting">In afwachting</option>
                   <option value="Goedgekeurd">Goedgekeurd</option>
                   <option value="Afgekeurd">Afgekeurd</option>
                   <option disabled="disabled" value="Geannuleerd">Geannuleerd</option>
                 </select>
               </i>
-              <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p>  
-              <p class="bold request__adress">{{booking.vehicle[0].field_straat[0].value}} {{booking.vehicle[0].field_huisnummer[0].value}} - {{booking.vehicle[0].field_locatie[0].value}}, {{booking.vehicle[0].field_land[0].value}}</p>       
+              <router-link :to="{ name: 'Detail' , params: { id: request.vehicle[0].id[0].value }}"> 
+                <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p> 
+              </router-link> 
+              <p class="bold request__adress">{{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}, {{request.vehicle[0].field_land[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ request.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ request.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.field_eind_datum[0].value | date("%R")}}</span> </p>
               <p class="request__price"><span class="bold">€ {{request.vehicle[0].field_prijs[0].value}}/km</span></p>
@@ -52,8 +55,8 @@ export default {
     }
   },
   created () {
-    window.shared.url.pathname = `bookings/owner/${this.profileId}`
-    axios.get(`${window.shared.url}?_format=json`)
+    this.$store.url.pathname = `bookings/owner/${this.profileId}`
+    axios.get(`${this.$store.state.url}?_format=json`)
       .then(({data: response}) => {
         for (let i = 0; i < response.length; i++) {
           var url = response[i].field_voertuig[0].url
@@ -76,8 +79,8 @@ export default {
     },
     getVehicle: function (path, i) {
       let self = this
-      window.shared.url.pathname = path
-      axios.get(`${window.shared.url}?_format=json`)
+      this.$store.url.pathname = path
+      axios.get(`${this.$store.state.url}?_format=json`)
         .then(({data: response}) => {
           self.requests[i].vehicle = [response]
           self.vehicle = response
@@ -85,13 +88,13 @@ export default {
         .catch(({message: error}) => { self.message.error = error })
     },
     changeState: function (request) {
-      window.shared.url.pathname = `efiara/bookings/${request.id[0].value}`
-      axios.patch(`${window.shared.url}?_format=hal_json`,
+      this.$store.url.pathname = `efiara/bookings/${request.id[0].value}`
+      axios.patch(`${this.$store.state.url}?_format=hal_json`,
         {
           'field_status': {
             'value': request.field_status[0].value
           }
-        }, window.shared.headers
+        }, this.$store.headers
       )
         .then(response => {
           console.log('Status is aangepast')

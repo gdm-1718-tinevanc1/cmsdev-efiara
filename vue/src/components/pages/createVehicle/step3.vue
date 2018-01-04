@@ -4,20 +4,21 @@
         <h4 class="title--page">Voorwaarden</h4>   
         <form class="form--create">
 
-          <label for="max_days">Maximum aantal dagen</label><br>
-          <input name="max_days" v-validate="'required|numeric|1-31'" id="max_days" placeholder="Maximum aantal dagen" v-model="vehicle.data.field_verhuurdagen[0].value"><br>
+          <label for="max_days">Maximum aantal dagen (1-31)</label><br>
+          <input name="maximum_dagen" v-validate="'required|numeric|between:1,31'" id="max_days" placeholder="Maximum aantal dagen" v-model="vehicle.data.field_verhuurdagen[0].value"
+           :class="{'input': true, 'is-danger': errors.has('maximum_dagen') }"><br>
 
-          <label for="max_kilometers">Maximum aantal kilometers per dag</label><br>
-          <input name="max_kilometers" v-validate="'required|numeric|100-1000'" id="max_kilometers" placeholder="Maximum aantal kilometers" v-model="vehicle.data.field_kilometers_per_dag[0].value"><br>
+          <label for="max_kilometers">Maximum aantal kilometers per dag (100-1000)</label><br>
+          <input name="maximum_km" v-validate="'required|numeric|between:100,1000'" id="max_kilometers" placeholder="Maximum aantal kilometers" v-model="vehicle.data.field_kilometers_per_dag[0].value"
+           :class="{'input': true, 'is-danger': errors.has('maximum_km') }"><br>
 
           <label for="min_age">Minimum leeftijd (18-21)</label><br>
-          <input name="min_age" v-validate="'required|numeric|18-21'" id="min_age" placeholder="Mimimum leeftijd" v-model="vehicle.data.field_min_leeftijd[0].value"><br>
+          <input name="minimum_leeftijd" v-validate="'required|numeric|between:18,21'" id="min_age" placeholder="Mimimum leeftijd" v-model="vehicle.data.field_min_leeftijd[0].value"
+           :class="{'input': true, 'is-danger': errors.has('minimum_leeftijd') }"><br>
 
-        <div class="message--error">{{message.error}}</div>
         <div class="message--succes">{{message.succes}}</div>
 
-
-        <div class="message--error"> <br>
+          <div class="message--error"> <br>
             <ul v-for="error in errors.all()">
               <li>{{error}}</li>
             </ul>
@@ -27,7 +28,7 @@
           </div>
 
         <!-- component? -->  
-        <div v-if="this.$validator.validateAll()">
+        <div>
           <div v-if="newVehicle">
             <div class="btn--primary"><a @click="next()"> Volgende</a></div>
           </div>
@@ -55,19 +56,45 @@ export default {
   name: 'step3',
   data: function () {
     return {
+      message: Requests.message,
       newVehicle: null,
-      vehicle: Requests.vehicle
+      vehicle: this.$store.state.create_vehicle
     }
   },
   created: function () {
-    this.newVehicle = Main.checkCreateOrEdit(this.$route.params)
+    Requests.message.error = ''
+    Requests.message.succes = ''
+    this.newVehicle = Main.checkCreateOrEdit(this.$route)
   },
   methods: {
     next: function () {
-      window.shared.create_vehicle.max_days = this.vehicle.data.field_verhuurdagen[0].value
-      window.shared.create_vehicle.min_age = this.vehicle.data.field_min_leeftijd[0].value
-      window.shared.create_vehicle.max_kilometers = this.vehicle.data.field_kilometers_per_dag[0].value
-      this.$router.push({name: 'Step4'})
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.$store.state.create_vehicle.data.field_verhuurdagen[0].value = this.vehicle.data.field_verhuurdagen[0].value
+          this.$store.state.create_vehicle.data.field_min_leeftijd[0].value = this.vehicle.data.field_min_leeftijd[0].value
+          this.$store.state.create_vehicle.data.field_kilometers_per_dag[0].value = this.vehicle.data.field_kilometers_per_dag[0].value
+          this.$router.push({name: 'Step4'})
+        }
+      })
+    },
+    save: function () {
+      let creds = {
+        'field_verhuurdagen': {
+          'value': this.vehicle.data.field_verhuurdagen[0].value
+        },
+        'field_kilometers_per_dag': {
+          'value': this.vehicle.data.field_kilometers_per_dag[0].value
+        },
+        'field_min_leeftijd': {
+          'value': this.vehicle.data.field_min_leeftijd[0].value
+        }
+      }
+      // Requests.patchVehicle(this.$route.params.id, creds)
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          Requests.patchVehicle(this.$route.params.id, creds)
+        }
+      })
     }
   },
   watch: {

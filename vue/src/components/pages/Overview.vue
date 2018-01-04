@@ -5,7 +5,6 @@
             <div v-for="vehicle in vehicles" >
                 <div class="vehicle" v-if="vehicle.available" >            
                 <router-link :to="{ name: 'Detail' , params: { id: vehicle.id[0].value }}">
-                {{vehicle.field_afbeelding[0].uri[0].value}}
                     <img v-if="vehicle.field_afbeelding.length" :src="vehicle.field_afbeelding[0].url"> 
                     <p class="price--big"><span class="big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
                     <p class="title">{{ vehicle.name[0].value}} {{ vehicle.field_model[0].value}},
@@ -15,7 +14,6 @@
               <div class="message--error">{{message.error}}</div>
               <div class="message--succes">{{message.succes}}</div>
             </div>
-            <div v-if="vehicles.length == 0">Er zijn geen voertuigen beschikbaar!</div>
             <div v-if="vehicles.length == 0">Er zijn geen voertuigen beschikbaar volgens jouw wensen.</div>
         </div>
     </div>
@@ -24,10 +22,7 @@
 
 <script>
 import axios from 'axios'
-import Moment from 'moment'
-import { extendMoment } from 'moment-range'
-
-const moment = extendMoment(Moment)
+import * as moment from 'moment'
 
 export default {
   beforeCreate: function () {
@@ -46,8 +41,9 @@ export default {
     }
   },
   created () {
-    window.shared.url.pathname = `vehicles/place/${this.$route.params.place}`
-    axios.get(`${window.shared.url}?_format=json`)
+    console.log(this.$route.params.place)
+    this.$store.state.url.pathname = `vehicles/place/${this.$route.params.place}`
+    axios.get(`${this.$store.state.url}?_format=json`)
       .then(({data: response}) => {
         this.vehicles = response
         let self = this
@@ -56,9 +52,9 @@ export default {
           let enddate = moment(this.enddate).format('YYYY-MM-DD')
           let range = moment.range(startdate, enddate)
 
-          if (response[i].field_beschikbaar.length) {
-            for (let j = 0; j < response[i].field_beschikbaar.length; j++) {
-              let fieldbeschikbaar = moment(response[i].field_beschikbaar[j].value).format('YYYY-MM-DD')
+          if (response[i].field_niet_beschikbaar.length) {
+            for (let j = 0; j < response[i].field_niet_beschikbaar.length; j++) {
+              let fieldbeschikbaar = moment(response[i].field_niet_beschikbaar[j].value).format('YYYY-MM-DD')
 
               if (fieldbeschikbaar !== startdate && fieldbeschikbaar !== enddate && !range.contains(moment(fieldbeschikbaar))) {
                 self.vehicles[i].available = true
@@ -70,7 +66,6 @@ export default {
           } else {
             self.vehicles[i].available = true
           }
-
           this.getBookings(response[i].id[0].value, range, i)
         }
       })
@@ -78,8 +73,8 @@ export default {
   },
   methods: {
     getBookings (idVehicle, rangeHome, i) {
-      window.shared.url.pathname = `bookings/vehicle/${idVehicle}`
-      axios.get(`${window.shared.url}?_format=hal_json`)
+      this.$store.state.url.pathname = `bookings/vehicle/${idVehicle}`
+      axios.get(`${this.$store.state.url}?_format=hal_json`)
         .then(({data: response}) => {
           for (let l = 0; l < response.length; l++) {
             this.vehicles[i].booking = [response]

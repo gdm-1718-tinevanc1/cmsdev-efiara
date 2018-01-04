@@ -13,7 +13,7 @@
                     <div class="close" @click="show = !show"><i class="fa fa-times" aria-hidden="true"></i></div>
                     <ul class="links" v-if="user.authenticated">
                         <li><router-link :to="{ name: 'Profile', params: { id: profile_id}}">Mijn profiel</router-link></li>
-                        <li><router-link to="/bookings">Geboekte auto's</router-link></li>
+                        <li><router-link to="/bookings">Geboekte voertuigen</router-link></li>
                         <li><router-link to="/vehicles/create/step1"></i>Voertuig verhuren</router-link></li>
                          <hr>
                         <li><router-link to="/myvehicles"> Mijn voertuigen</router-link></li>

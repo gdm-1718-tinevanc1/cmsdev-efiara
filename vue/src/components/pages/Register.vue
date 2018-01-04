@@ -22,8 +22,8 @@
 					 <label for="bevestiging_wachtwoord">Bevestigen wachtwoord</label><br>
           <input name="bevestiging_wachtwoord" id="confirmPassword" type="password" v-validate="'required|confirmed:wachtwoord'" placeholder="Bevestigen wachtwoord" v-model="confirmPassword" :class="{'input': true, 'is-danger': errors.has('bevestiging_wachtwoord') }"><br>
            
-           <label for="telefoonnummer">Telefoonnummer</label><br>
-          <input name="telefoonnummer" id="phonenumber" type="text" placeholder="Telefoonnummer" v-validate="'required|numeric'" v-model="credentials.phonenumber" :class="{'input': true, 'is-danger': errors.has('telefoonnummer') }"><br>
+           <label for="telefoonnummer">Telefoonnummer (+32..)</label><br>
+          <input name="telefoonnummer" id="phonenumber" type="text" placeholder="Telefoonnummer" v-validate="'required'" v-model="credentials.phonenumber" :class="{'input': true, 'is-danger': errors.has('telefoonnummer') }"><br>
            
            <label for="geboortedatum">Geboortedatum</label><br>
           <input name="geboortedatum" id="bday" type="date" placeholder="Geboortedatum" v-validate="'required'" v-model="credentials.bday" :class="{'input': true, 'is-danger': errors.has('geboortedatum') }"><br>

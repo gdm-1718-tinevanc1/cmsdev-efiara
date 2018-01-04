@@ -85,8 +85,8 @@ export default {
     }
   },
   created () {
-    window.shared.url.pathname = `user/${this.profileId}`
-    axios.get(`${window.shared.url}?_format=json`)
+    this.$store.state.url.pathname = `user/${this.profileId}`
+    axios.get(`${this.$store.state.url}?_format=json`)
       .then(({data: response}) => {
         this.user = response
       })
@@ -97,8 +97,8 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           if (this.checkAuth) {
-            window.shared.url.pathname = `user/${this.profileId}`
-            axios.patch(`${window.shared.url}?_format=hal_json`,
+            this.$store.state.url.pathname = `user/${this.profileId}`
+            axios.patch(`${this.$store.state.url}?_format=hal_json`,
               {
                 'field_geboortedatum': {
                   'value': this.user.field_geboortedatum[0].value
@@ -115,7 +115,7 @@ export default {
                 'field_telefoonnummer': {
                   'value': this.user.field_telefoonnummer[0].value
                 }
-              }, window.shared.headers
+              }, this.$store.state.headers
             )
               .then(response => {
                 this.message.succes = 'Je profiel is aangepast'

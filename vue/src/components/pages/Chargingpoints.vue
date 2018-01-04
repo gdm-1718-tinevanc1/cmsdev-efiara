@@ -41,7 +41,7 @@
                 </tr>
                 <tr>
                   <td>Eingenaar</td>
-                  <td>{{ activePoint.field_eigenaar[0].url}}</td>
+                  <td>{{ activePoint.owner[0].name[0].value}}</td>
                 </tr>
                 <tr>
                   <td>Prijs</td>
@@ -75,7 +75,9 @@ export default {
   data () {
     return {
       geocoder: require('geocoder'),
-      chargingpoints: [],
+      chargingpoints: {
+        owner: []
+      },
       message: {
         error: '',
         succes: ''
@@ -89,12 +91,15 @@ export default {
   },
   created () {
     // get chargingpoints
-    window.shared.url.pathname = 'charging_points'
-    axios.get(`${window.shared.url}?_format=json`)
+    this.$store.state.url.pathname = 'charging_points'
+    axios.get(`${this.$store.state.url}?_format=json`)
       .then(({data: response}) => {
         this.chargingpoints = response
         this.getMarkers()
-        console.log(this.chargingpoints.length)
+        for (var i = 0; i < response.length; i++) {
+          var url = response[i].field_eigenaar[0].url
+          this.getOwner(url, i)
+        }
       })
       .catch(({message: error}) => { this.message.error = error })
   },
@@ -135,6 +140,12 @@ export default {
       })
       // vm.message = 'new message' // change data
       // vm.$el.textContent === 'new message' // false
+    },
+    getOwner: function (path, i) {
+      this.$store.state.url.pathname = path
+      axios.get(`${this.$store.state.url}?_format=json`)
+        .then(({data: response}) => { this.chargingpoints[i].owner = [response] })
+        .catch(({message: error}) => { this.message.error += error })
     }
   },
   watch: {

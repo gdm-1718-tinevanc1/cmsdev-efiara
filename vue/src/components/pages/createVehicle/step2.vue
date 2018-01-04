@@ -5,19 +5,28 @@
         <form class="form--create">
 
           <label for="straat">Straat</label><br>
-          <input name="straat" id="straat" placeholder="Straat" v-model="vehicle.street"><br>
+          <input name="straat" id="straat" v-validate="'required'" placeholder="Straat" v-model="vehicle.data.field_straat[0].value"
+           :class="{'input': true, 'is-danger': errors.has('straat') }"><br>
 
-          <label for="nummer">Nummer</label><br>
-          <input name="nummer" id="nummer" placeholder="Nummer" type="number" v-model="vehicle.number"><br>
+          <label for="nummer">Huisnummer</label><br>
+          <input name="huisnummer" id="huisnummer" v-validate="'required|numeric'" placeholder="Huisnummer" type="number" v-model="vehicle.data.field_huisnummer[0].value"
+           :class="{'input': true, 'is-danger': errors.has('huisnummer') }"><br>
 
           <label for="plaats">Plaats</label><br>
-          <input name="plaats" v-validate="'required'" id="plaats" placeholder="Plaats" v-model="vehicle.data.field_locatie[0].value"><br>
+          <input name="plaats" v-validate="'required'" id="plaats" placeholder="Plaats" v-model="vehicle.data.field_locatie[0].value"
+           :class="{'input': true, 'is-danger': errors.has('plaats') }"><br>
 
-          <label for="Land">Land</label><br>
-          <input name="Land" id="Land" placeholder="Land" v-model="vehicle.country"><br>
+          <label for="land">Land</label>
+          <select name="land" v-validate="'required'" placeholder="Land" v-model="vehicle.data.field_opties[0].target_id" 
+           :class="{'input': true, 'is-danger': errors.has('land') }"><br>
+              <option value="" disabled>Kies jouw land</option>
+              <option v-for="country in countries" :value="country.tid[0].value">
+                {{country.name[0].value}}
+              </option>
+          </select>
 
-          <div class="message--error">{{message.error}}</div>
-          <div class="message--succes">{{message.succes}}</div>
+
+         <div class="message--succes">{{message.succes}}</div>
 
           <div class="message--error"> <br>
             <ul v-for="error in errors.all()">
@@ -29,7 +38,7 @@
           </div>
 
           <!-- component? -->  
-          <div v-if="this.$validator.validateAll()">
+          <div>
             <div v-if="newVehicle">
               <div class="btn--primary"><a @click="next()"> Volgende</a></div>
             </div>
@@ -47,7 +56,7 @@
 
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import Main from '../../../main.js'
 import Requests from '../../../requests.js'
 
@@ -58,20 +67,55 @@ export default {
   name: 'step2',
   data: function () {
     return {
+      message: Requests.message,
       newVehicle: null,
-      vehicle: Requests.vehicle
+      vehicle: this.$store.state.create_vehicle,
+      countries: []
     }
   },
   created: function () {
-    this.newVehicle = Main.checkCreateOrEdit(this.$route.params)
+    Requests.message.error = ''
+    Requests.message.succes = ''
+    this.newVehicle = Main.checkCreateOrEdit(this.$route)
+
+    this.$store.state.url.pathname = `taxonomie/landen`
+    axios.get(`${this.$store.state.url}?_format=hal_json`)
+      .then(({data: response}) => { this.countries = response })
+      .catch(({message: error}) => { this.message.error = error })
   },
   methods: {
     next: function () {
-      window.shared.create_vehicle.street = this.vehicle.street
-      window.shared.create_vehicle.number = this.vehicle.number
-      window.shared.create_vehicle.place = this.vehicle.data.field_locatie[0].value
-      window.shared.create_vehicle.country = this.vehicle.country
-      this.$router.push({name: 'Step3'})
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.$store.state.create_vehicle.data.field_straat[0].value = this.vehicle.data.field_straat[0].value
+          this.$store.state.create_vehicle.data.field_huisnummer[0].value = this.vehicle.data.field_huisnummer[0].value
+          this.$store.state.create_vehicle.data.field_locatie[0].value = this.vehicle.data.field_locatie[0].value
+          this.$store.state.create_vehicle.data.field_land[0].value = this.vehicle.data.field_land[0].target_id
+          this.$router.push({name: 'Step3'})
+        }
+      })
+    },
+    save: function () {
+      let creds = {
+        'field_straat': {
+          'value': this.vehicle.data.field_straat[0].value
+        },
+        'field_huisnummer': {
+          'value': this.vehicle.data.field_huisnummer[0].value
+        },
+        'field_locatie': {
+          'value': this.vehicle.data.field_locatie[0].value
+        },
+        'field_land': {
+          'target_id': this.vehicle.data.field_land[0].target_id
+        }
+      }
+      // Requests.patchVehicle(this.$route.params.id, creds)
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          Requests.patchVehicle(this.$route.params.id, creds)
+        }
+      })
     }
   },
   watch: {

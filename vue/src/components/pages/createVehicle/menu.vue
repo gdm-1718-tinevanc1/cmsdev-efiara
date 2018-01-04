@@ -27,7 +27,7 @@
 <script>
 import axios from 'axios'
 import Main from '../../../main.js'
-import Requests from '../../../requests.js'
+// import Requests from '../../../requests.js'
 
 export default {
   beforeCreate: function () {
@@ -42,7 +42,7 @@ export default {
         succes: '',
         error: ''
       },
-      vehicle: Requests.vehicle
+      vehicle: this.$store.state.create_vehicle
     }
   },
   created: function () {
@@ -51,8 +51,8 @@ export default {
   methods: {
     deleteVehicle: function () {
       if (confirm(`Ben je zeker dat je '${this.vehicle.data.name[0].value}' wilt verwijderen?`)) {
-        window.shared.url.pathname = `efiara/vehicles/${this.vehicleId}`
-        axios.delete(`${window.shared.url}?_format=hal_json`, window.shared.headers)
+        this.$store.state.url.pathname = `efiara/vehicles/${this.vehicleId}`
+        axios.delete(`${this.$store.state.url}?_format=hal_json`, this.$store.state.headers)
           .then(({data: response}) => {
             this.message.succes = 'Je voertuig is verwijderd!'
             this.$router.push({name: 'MyVehicles'})

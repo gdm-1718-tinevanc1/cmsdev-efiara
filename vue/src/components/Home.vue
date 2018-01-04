@@ -8,20 +8,23 @@
           </label><br>
 
           <label id="label--begindate">
-            <input name="begindatum" id="begindate" type="date" placeholder="Begin datum" v-validate="'required'" v-model="filter.startdate" :class="{'input': true, 'is-danger': errors.has('begindatum') }">
-          </label><br>
+          <datepicker v-on:input="validateRating" v-validate="'required'" v-model="filter.startdate" :disabled="state.disabled" language="nl" type="date" name="begindatum" id="begindate" placeholder="Begin datum" :class="{'input': true, 'is-danger': errors.has('begindatum') }"></datepicker>
+          </label>
 
           <label id="label--enddate">
-            <input name="einddatum"id="enddate" type="date" placeholder="Eind datum" v-validate="'required'" v-model="filter.enddate" :class="{'input': true, 'is-danger': errors.has('einddatum') }">
-          </label><br>
+          <datepicker v-on:input="validateRating" v-validate="'required'" v-model="filter.enddate" :disabled="state.disabled" language="nl" type="date" name="einddatum" id="enddate" placeholder="Eind datum" :class="{'input': true, 'is-danger': errors.has('begindatum') }"></datepicker>
+          </label>
 
           <div class="message--error">
             <ul v-for="error in errors.all()">
               <li>{{error}}</li>
             </ul>
+            <span>
+              {{message.error}}
+            </span>
           </div>
 
-          <div class="btn--login"><router-link :to="{ name: 'Overview', params: { place: filter.place, startdate: filter.startdate, enddate: filter.enddate}}" exact><a>Zoeken</a> </router-link></div>
+          <div class="btn--login"><a @click="search()">Zoeken</a></div>
         </form>
     </div>
   </div>
@@ -29,7 +32,10 @@
 <script>
 import Vue from 'vue'
 import VeeValidate, {Validator} from 'vee-validate'
+import Datepicker from 'vuejs-datepicker'
 import messages from 'vee-validate/dist/locale/nl'
+import * as moment from 'moment'
+Vue.use(require('vue-moment'))
 
 Validator.addLocale(messages)
 const config = {
@@ -44,20 +50,43 @@ export default {
     document.body.className = 'background--image'
   },
   name: 'home',
+  components: {
+    Datepicker
+  },
   data: function () {
     return {
       filter: {
         place: '',
         startdate: '',
         enddate: ''
+      },
+      message: {
+        error: ''
+      },
+      state: {
+        date: {},
+        disabled: {
+          to: new Date()
+        }
       }
     }
   },
   methods: {
-    redirectTo: function () {
+    search: function () {
       this.$validator.validateAll().then((result) => {
-        this.$router.push({name: 'Overview', params: {place: this.filter.place, startdate: this.filter.startdate, enddate: this.filter.enddate}})
+        if (this.filter.startdate && this.filter.enddate) {
+          let startdate = moment(this.filter.startdate).format('YYYY-MM-DD')
+          let enddate = moment(this.filter.enddate).format('YYYY-MM-DD')
+          this.$router.push({name: 'Overview', params: {place: this.filter.place, startdate: startdate, enddate: enddate}})
+        } else {
+          this.message.error = 'beide datums zijn verplicht'
+        }
       })
+    },
+    validateRating: function () {
+      if (this.filter.startdate && this.filter.enddate) {
+        this.message.error = ''
+      }
     }
   }
 }

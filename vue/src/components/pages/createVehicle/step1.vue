@@ -5,36 +5,46 @@
         <form class="form--create">
 
           <label for="merk">Merk</label><br>
-          <input v-validate="'required'" name="merk" id="merk" placeholder="Merk" v-model="vehicle.data.name[0].value"><br>
+          <input name="merk" id="merk" v-validate="'required'" placeholder="Merk" v-model="vehicle.data.name[0].value"  
+          :class="{'input': true, 'is-danger': errors.has('merk') }"><br>
 
           <label for="model">Model</label><br>
-          <input v-validate="'required'" name="model" id="model" placeholder="Model" v-model="vehicle.data.field_model[0].value"><br>
-
-          <label for="landinschrijving">Land van inschrijving</label><br>
-          <input name="landinschrijving" id="landinschrijving" placeholder="Land van inschrijving"><br>
+          <input name="model" id="model" v-validate="'required'"  placeholder="Model" v-model="vehicle.data.field_model[0].value"
+           :class="{'input': true, 'is-danger': errors.has('model') }"><br>
 
           <label for="inschrijvingsjaar">Jaar inschrijving</label><br>
-          <input v-validate="'required|year'" name="inschrijvingsjaar" id="inschrijvingsjaar" placeholder="Jaar inschrijving" v-model="vehicle.data.field_inschrijvingsjaar[0].value"><br>
+          <input name="inschrijvingsjaar" v-validate="'required|date_format:YYYY'"  id="inschrijvingsjaar" placeholder="Jaar inschrijving" v-model="vehicle.data.field_inschrijvingsjaar[0].value"
+           :class="{'input': true, 'is-danger': errors.has('inschrijvingsjaar') }"><br>
 
           <h5>Kenmerken</h5>
           <label for="zitplaatsen">Aantal zitplaatsen</label><br>
-          <input v-validate="'required|numeric'" name="zitplaatsen" id="zitplaatsen" placeholder="Aantal zitplaatsen" v-model="vehicle.data.field_zitplaatsen[0].value"><br>
+          <input name="zitplaatsen" v-validate="'required|numeric'"  id="zitplaatsen" placeholder="Aantal zitplaatsen" v-model="vehicle.data.field_zitplaatsen[0].value"
+           :class="{'input': true, 'is-danger': errors.has('zitplaatsen') }"><br>
 
           <label for="deuren">Aantal deuren</label><br>
-          <input v-validate="'required|numeric'" name="deuren" id="deuren" placeholder="Aantal deuren" v-model="vehicle.data.field_deuren[0].value"><br>
+          <input name="deuren" id="deuren" v-validate="'required|numeric'" placeholder="Aantal deuren" v-model="vehicle.data.field_deuren[0].value"
+           :class="{'input': true, 'is-danger': errors.has('deuren') }"><br>
 
           <label for="versnellingsbak">Versnellingsbak</label><br>
-          <select name="versnellingsbak" id="versnellingsbak" v-validate="'required'" v-model="vehicle.data.field_versnellingsbak[0].value">
+          <select name="versnellingsbak" id="versnellingsbak" v-validate="'required'" v-model="vehicle.data.field_versnellingsbak[0].value"
+           :class="{'input': true, 'is-danger': errors.has('versnellingsbak') }">
             <option value="" disabled selected>Versnellingsbak</option>
             <option value="Handmatig">Handmatig</option>
             <option value="Automatic">Automatic</option>
           </select>
 
           <label for="kilometers">Aantal totale kilometers</label><br>
-          <input name="kilometers" v-validate="'required|numeric'" id="kilometers" placeholder="Aantal totale kilometers" v-model="vehicle.data.field_kilometerstand[0].value"><br>
+          <input name="kilometers" v-validate="'required|numeric'" id="kilometers" placeholder="Aantal totale kilometers" v-model="vehicle.data.field_kilometerstand[0].value"
+           :class="{'input': true, 'is-danger': errors.has('kilometers') }"
+          ><br>
 
-          <label for="verbruik">Verbruik</label><br>
-          <input name="verbruik" v-validate="'required|numeric'" id="verbruik" placeholder="Verbruik"><br>
+          <label for="opties">Opties</label>
+          <select name="opties" placeholder="Opties" v-model="activeOptions" style="height:150px;" multiple><br>
+            <option v-for="option in options" :value="option.tid[0].value">
+              {{option.name[0].value}}
+            </option>
+          </select>
+
 
           <div class="message--succes">{{message.succes}}</div>
 
@@ -48,7 +58,7 @@
           </div>
 
           <!-- component? -->  
-          <div v-if="this.$validator.validateAll()">
+          <div>
             <div v-if="newVehicle">
               <div class="btn--primary"><a @click="next()"> Volgende</a></div>
             </div>
@@ -78,29 +88,51 @@ export default {
   name: 'step1',
   data: function () {
     return {
-      message: {
-        succes: '',
-        error: ''
-      },
+      message: Requests.message,
+      countries: {},
       newVehicle: null,
-      vehicle: Requests.vehicle
+      vehicle: this.$store.state.create_vehicle,
+      options: [],
+      activeOptions: []
     }
   },
   created: function () {
-    this.newVehicle = Main.checkCreateOrEdit(this.$route.params)
+    Requests.message.error = ''
+    Requests.message.succes = ''
+    this.newVehicle = Main.checkCreateOrEdit(this.$route)
+    this.$store.state.url.pathname = `taxonomie/opties`
+    axios.get(`${this.$store.state.url}?_format=hal_json`)
+      .then(({data: response}) => { this.options = response })
+      .catch(({message: error}) => { this.message.error = error })
+    alert(this.vehicle.data.field_opties.length)
+    for (var i = 0; i < this.vehicle.data.field_opties.length; i++) {
+      this.getOptions(this.vehicle.data.field_opties[i].url, i)
+    }
   },
   methods: {
     next: function () {
-      window.shared.create_vehicle.brand = this.vehicle.data.name[0].value
-      window.shared.create_vehicle.model = this.vehicle.data.field_model[0].value
-      window.shared.create_vehicle.vehicle_year = this.vehicle.data.field_inschrijvingsjaar[0].value
-      window.shared.create_vehicle.seating = this.vehicle.data.field_zitplaatsen[0].value
-      window.shared.create_vehicle.doors = this.vehicle.data.field_deuren[0].value
-      window.shared.create_vehicle.gearbox = this.vehicle.data.field_versnellingsbak[0].value
-      window.shared.create_vehicle.kilometers = this.vehicle.data.field_kilometerstand[0].value
-      this.$router.push({name: 'Step2'})
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.$store.state.create_vehicle.data.name[0].value = this.vehicle.data.name[0].value
+          this.$store.state.create_vehicle.data.field_model[0].value = this.vehicle.data.field_model[0].value
+          this.$store.state.create_vehicle.data.field_inschrijvingsjaar[0].value = this.vehicle.data.field_inschrijvingsjaar[0].value
+          this.$store.state.create_vehicle.data.field_zitplaatsen[0].value = this.vehicle.data.field_zitplaatsen[0].value
+          this.$store.state.create_vehicle.data.field_deuren[0].value = this.vehicle.data.field_deuren[0].value
+          this.$store.state.create_vehicle.data.field_versnellingsbak[0].value = this.vehicle.data.field_versnellingsbak[0].value
+          this.$store.state.create_vehicle.data.field_kilometerstand[0].value = this.vehicle.data.field_kilometerstand[0].value
+          for (let i = 0; i < this.activeOptions.length; i++) {
+            this.$store.state.create_vehicle.data.field_opties[i] = { 'target_id': this.activeOptions[i] }
+          }
+          this.$router.push({name: 'Step2'})
+        }
+      })
     },
     save: function () {
+      /* eslint-disable camelcase */
+      let field_opties = []
+      for (let i = 0; i < this.activeOptions.length; i++) {
+        field_opties[i] = { 'target_id': this.activeOptions[i] }
+      }
       let creds = {
         'name': {
           'value': this.vehicle.data.name[0].value
@@ -122,36 +154,25 @@ export default {
         },
         'field_kilometerstand': {
           'value': this.vehicle.data.field_kilometerstand[0].value
-        }
-        /*
-        'field_locatie': {
-          'value': vehicle.data.field_locatie[0].value
-        }
-
-        'field_verhuurdagen': {
-          'value': vehicle.data.field_verhuurdagen[0].value
         },
-        'field_min_leeftijd': {
-          'value': vehicle.data.field_min_leeftijd[0].value
-        },
-        'field_kilometers_per_dag': {
-          'value': vehicle.data.field_kilometers_per_dag[0].value
-        }
-
-        'field_prijs': {
-          'value': vehicle.data.field_prijs[0].value
-        }
-        */
+        field_opties
       }
+      console.log(creds)
       // Requests.patchVehicle(this.$route.params.id, creds)
-      window.shared.url.pathname = `efiara/vehicles/${this.$route.params.id}`
-      axios.patch(`${window.shared.url}?_format=hal_json`, creds, window.shared.headers)
-        .then(response => {
-          this.message.succes = 'Je voertuig is aangepast'
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          Requests.patchVehicle(this.$route.params.id, creds)
+        }
+      })
+      /* eslint-enable camelcase */
+    },
+    getOptions: function (path, i) {
+      this.$store.state.url.pathname = path
+      axios.get(`${this.$store.state.url}?_format=json`)
+        .then(({data: response}) => {
+          this.activeOptions.push(response.tid[0].value)
         })
-        .catch(error => {
-          this.message.error = error.response.data.message
-        })
+        .catch(({message: error}) => { this.message.error = error })
     }
   },
   watch: {

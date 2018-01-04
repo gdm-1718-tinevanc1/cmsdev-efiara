@@ -1,5 +1,5 @@
 .form{
-  input, select{
+  input, select, textarea{
     height: 30px;
     width: calc(75% - 5px);
     padding-left: 5px;
@@ -22,12 +22,16 @@
 }
 
  
-.form--book, .form--profile, .form--create{
+.form--book, .form--profile, .form--create, .form--review{
   @extend .form;
-  input, select{
+  input, select, textarea{
     background-color: #FAFAFA;
-    border: 1px solid rgb(203, 205, 206);
+    border: 1px solid $grey-light;
   }
+}
+
+.form--review .vue-star-rating{
+  margin: 0 auto;
 }
 
 .form--profile, .form--create{
@@ -38,6 +42,17 @@
 
 .form--home{
   @extend .form;
+  color: #000000;
+  
+  .vdp-datepicker {
+    margin-left: 12.5%;
+    margin-top: -20px;
+
+    input{
+      width: calc(100% - 50px);
+    }
+  }
+
   input, select{
     height: 35px;
     width: calc(75% - 35px);
@@ -50,6 +65,7 @@
 
   #label--place, #label--enddate, #label--begindate{
     position: relative;
+    z-index: 99;
   }
   
   #label{
@@ -69,6 +85,7 @@
     &--begindate:before, &--enddate:before{
       @extend #label:before;
       content: '\f133';
+      margin-top: 10px;
     }
   }
 }
@@ -102,4 +119,18 @@
 
 .is-danger{
   border: 1px solid $error-color !important;
+}
+
+
+.vdp-datepicker__calendar{
+  margin-left: 12.5%;
+  margin-top:5px;
+}
+
+.form--create{
+  ul{
+    margin-left: 12.5%;
+    display: inline-block;
+
+  }
 }

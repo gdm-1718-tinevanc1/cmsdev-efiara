@@ -2,18 +2,21 @@
   <div class="container">
      <div class="book">
         <form class="form--book">
-          <p class="bookVehicle">Voertuig</p>
+          <p class="book--title">{{vehicle.name[0].value}} {{vehicle.field_model[0].value}} </p>
           <label for="begindatum">Begin datum</label><br>
-          <datepicker v-validate="'required'" v-model="data_book.startdate" :disabled="state.disabled_startdate" v-on:closed="enddateDisabled" language="nl" type="date" name="begindatum" id="begindate" placeholder="Begin datum" :class="{'input': true, 'is-danger': errors.has('begindatum') }"></datepicker>
+          <datepicker v-on:selected="getStartdate" v-validate="'required'" v-model="data_book.startdate" :disabled="state.disabled_startdate" v-on:closed="enddateDisabled" language="nl" type="date" name="begindatum" id="begindate" placeholder="Begin datum" :class="{'input': true, 'is-danger': errors.has('begindatum') }"></datepicker>
 
           <label for="begintijd">Start uur</label><br>          
           <input v-validate="'required'" type="time" name="begintijd" id="begintime" v-model="data_book.starttime" :class="{'input': true, 'is-danger': errors.has('begintijd') }">
 
           <label for="einddatum">Eind datum</label><br>
-          <datepicker v-validate="'required'"v-model="data_book.enddate" :disabled="state.disabled_enddate" type="date" name="enddate" id="einddatum" placeholder="Eind datum" :open-date="data_book.startdate" :class="{'input': true, 'is-danger': errors.has('einddatum') }"></datepicker>
+          <datepicker v-on:selected="getEnddate" v-validate="'required'"v-model="data_book.enddate" :disabled="state.disabled_enddate" type="date" name="enddate" id="einddatum" placeholder="Eind datum" :open-date="data_book.startdate" :class="{'input': true, 'is-danger': errors.has('einddatum') }"></datepicker>
 
           <label for="eindtijd">Eind uur</label><br>          
           <input v-validate="'required'" type="time" name="eindtijd" id="endtime" v-model="data_book.endtime" :class="{'input': true, 'is-danger': errors.has('eindtijd') }">
+
+          <p class="book--price">Prijs: € {{ vehicle.field_prijs[0].value}} /dag </p>
+          <p class="book--price" v-if="price">Totale prijs: € {{ price }} </p>
 
            <div class="message--error"> <br>
             <ul v-for="error in errors.all()">
@@ -31,12 +34,13 @@
 </template>
 
 <script>
-import HotelDatePicker from 'vue-hotel-datepicker'
-import Vue from 'vue'
 import Datepicker from 'vuejs-datepicker'
-import axios from 'axios'
 import * as moment from 'moment'
-Vue.use(require('vue-moment'))
+import axios from 'axios'
+
+/* import axios from 'axios'
+import * as moment from 'moment'
+Vue.use(require('vue-moment')) */
 
 export default {
   beforeCreate: function () {
@@ -44,8 +48,7 @@ export default {
   },
   name: 'book',
   components: {
-    Datepicker,
-    HotelDatePicker
+    Datepicker
   },
   data () {
     return {
@@ -68,6 +71,7 @@ export default {
       state: {
         date: {},
         disabled_startdate: {
+          to: new Date(),
           dates: [],
           ranges: []
         },
@@ -75,23 +79,23 @@ export default {
           to: null,
           from: null
         }
-      }
+      },
+      price: null
     }
   },
   created () {
     console.log(this.$children)
-    window.shared.url.pathname = `efiara/vehicles/${this.vehicleId}`
-    axios.get(`${window.shared.url}?_format=hal_json`)
+    this.$store.state.url.pathname = `efiara/vehicles/${this.vehicleId}`
+    axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => {
-        for (let i = 0; i < response.field_beschikbaar.length; i++) {
-          this.state.disabled_startdate.dates[i] = new Date(response.field_beschikbaar[i].value)
+        for (let i = 0; i < response.field_niet_beschikbaar.length; i++) {
+          this.state.disabled_startdate.dates[i] = new Date(response.field_niet_beschikbaar[i].value)
         }
         this.vehicle = response
       })
       .catch(({message: error}) => { this.message.error = error })
-
-    window.shared.url.pathname = `bookings/vehicle/${this.vehicleId}`
-    axios.get(`${window.shared.url}?_format=hal_json`)
+    this.$store.state.url.pathname = `bookings_active/vehicle/${this.vehicleId}/goedgekeurd,in afwachting`
+    axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => {
         for (let i = 0; i < response.length; i++) {
           this.state.disabled_startdate.ranges[i] = {
@@ -106,8 +110,8 @@ export default {
     submit: function () {
       this.$validator.validateAll().then((result) => {
         console.log(this.data_book.startdate)
-        window.shared.url.pathname = 'entity/bookings'
-        axios.post(`${window.shared.url}?_format=hal_json`,
+        this.$store.state.url.pathname = 'entity/bookings'
+        axios.post(`${this.$store.state.url}?_format=hal_json`,
           {
             'name': {
               'value': moment(this.data_book.startdate).format('YYYY-MM-DD') + 'T' + this.data_book.starttime + ':00'
@@ -118,16 +122,20 @@ export default {
             'field_status': {
               'value': 'In afwachting'
             },
+            'field_prijs': {
+              'value': this.price
+            },
             'field_huurder': {
               'target_id': this.userId
             },
             'field_voertuig': {
               'target_id': this.vehicleId
             }
-          }, window.shared.headers
+          }, this.$store.state.headers
         )
           .then(({data: response}) => {
             this.message.succes = 'U heeft succesvol geboekt'
+            this.$router.push({name: 'Bookings'})
           })
           .catch(({message: error}) => { this.message.error = error })
       })
@@ -155,6 +163,22 @@ export default {
             stop = true
           }
         }
+      }
+    },
+    getStartdate (date) {
+      this.data_book.startdate = date
+      this.calculatePrice()
+    },
+    getEnddate (date) {
+      this.data_book.enddate = date
+      this.calculatePrice()
+    },
+    calculatePrice () {
+      if (this.data_book.startdate && this.data_book.enddate) {
+        var startdate = moment(this.data_book.startdate)
+        var enddate = moment(this.data_book.enddate)
+        var diff = Math.abs(startdate.diff(enddate, 'days')) + 1
+        this.price = this.vehicle.field_prijs[0].value * diff
       }
     }
   },

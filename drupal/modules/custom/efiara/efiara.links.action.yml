@@ -28,3 +28,8 @@ entity.owner_charging_points.add_form:
   title: 'Add Owner charging points'
   appears_on:
     - entity.owner_charging_points.collection
+entity.review.add_form:
+  route_name: entity.review.add_form
+  title: 'Add Review'
+  appears_on:
+    - entity.review.collection
