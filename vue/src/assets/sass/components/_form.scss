@@ -20,9 +20,8 @@
 .form--login{
   @extend .form;
 }
-
  
-.form--book, .form--profile, .form--create, .form--review{
+.form--book, .form--profile, .form--create, .form--review, .form--contact{
   @extend .form;
   input, select, textarea{
     background-color: #FAFAFA;
@@ -30,11 +29,7 @@
   }
 }
 
-.form--review .vue-star-rating{
-  margin: 0 auto;
-}
-
-.form--profile, .form--create{
+.form--profile, .form--create, .form--contact{
   input, select{
     height: 20px;    
   }
@@ -90,6 +85,9 @@
   }
 }
 
+.form--review .vue-star-rating{
+  margin: 0 auto;
+}
 
 .chargingpoints{
   .input--location{

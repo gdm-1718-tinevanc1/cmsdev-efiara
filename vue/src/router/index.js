@@ -14,6 +14,7 @@ import Profile from '@/components/pages/Profile'
 import ProfileEdit from '@/components/pages/ProfileEdit'
 import Info from '@/components/pages/Info'
 import Requests from '@/components/pages/Requests'
+import Contact from '@/components/pages/Contact'
 
 import Menu from '@/components/pages/createVehicle/menu'
 import Step1 from '@/components/pages/createVehicle/step1'
@@ -84,6 +85,11 @@ export default new Router({
       path: '/info',
       name: 'Info',
       component: Info
+    },
+    {
+      path: '/contact',
+      name: 'Contact',
+      component: Contact
     },
     {
       path: '/requests',

@@ -86,7 +86,7 @@
           <div class="bold">{{review.name[0].value}}</div>
           {{review.field_commentaar[0].value}}
         </div>
-        <form class="form--review" on:submit.prevent="submitReview" data-vv-scope="review">
+        <form v-if="checkAuthVehicle" class="form--review" on:submit.prevent="submitReview" data-vv-scope="review">
           <hr>
           <p>Geef jouw mening:</p>
           <star-rating name="rating" @rating-selected="validateRating" v-model="reviewCredentials.score" :star-size="20" :show-rating="false"></star-rating>

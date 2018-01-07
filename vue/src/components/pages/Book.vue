@@ -76,8 +76,8 @@ export default {
           ranges: []
         },
         disabled_enddate: {
-          to: null,
-          from: null
+          to: new Date(),
+          from: new Date()
         }
       },
       price: null
@@ -161,7 +161,7 @@ export default {
           let formatDate1 = moment(this.state.disabled_startdate.dates[i]).format('YYYY-MM-DD')
           let formatDate2 = moment(this.state.disabled_startdate.ranges[i].from).format('YYYY-MM-DD')
           if (formatDate1 === moment(date).format('YYYY-MM-DD') || formatDate2 === moment(date).format('YYYY-MM-DD')) {
-            let newEnddate = moment(date)
+            let newEnddate = moment(date).subtract(1, 'days')
             this.state.disabled_enddate.from = newEnddate._d
             stop = true
           }

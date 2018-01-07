@@ -4,7 +4,7 @@
         <h4 class="title--page">Mijn profiel</h4>
          <form class="form--profile">
           <label for="gebruikersnaam">Gebruikersnaam</label><br>
-          <input name="gebruikersnaam" id="gebruikersnaam" placeholder="Naam" v-model="creds.name[0].value" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('username') }"><br>
+          <input name="gebruikersnaam" id="gebruikersnaam" placeholder="Naam" v-model="creds.name[0].value" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('gebruikersnaam') }"><br>
 
           <label for="naam">Naam</label><br>
           <input name="naam" id="naam" placeholder="Naam" v-model="creds.field_naam[0].value" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('naam') }"><br>

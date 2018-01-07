@@ -21,11 +21,13 @@
                          <hr>
                         <li><router-link to="/chargingpoints"> Laadpunten</router-link></li>
                         <li><router-link to="/info"> Info</router-link></li>
+                        <li><router-link to="/contact"> Contact</router-link></li>
                         <li><a @click="logout()">Uitloggen</a></li>
                     </ul>
                     <ul class="links" v-else>
                         <li><router-link to="/chargingpoints"> Laadpunten</router-link></li>
                         <li><router-link to="/info"> Info</router-link></li>
+                        <li><router-link to="/contact"> Contact</router-link></li>
                         <li><router-link to="/login"> Inloggen</router-link></li>
                     </ul>
                 </div>
