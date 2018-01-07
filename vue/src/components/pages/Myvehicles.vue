@@ -43,7 +43,6 @@ export default {
   },
   created () {
     this.$store.state.url.pathname = `vehicles/owner/${this.profileId}`
-    console.log(this.$store.url)
     axios.get(`${this.$store.state.url}`)
       .then(({data: response}) => { this.vehicles = response })
       .catch(({message: error}) => { this.message.error = error })

@@ -104,7 +104,7 @@ export default {
     axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => { this.options = response })
       .catch(({message: error}) => { this.message.error = error })
-    alert(this.vehicle.data.field_opties.length)
+    // alert(this.vehicle.data.field_opties.length)
     for (var i = 0; i < this.vehicle.data.field_opties.length; i++) {
       this.getOptions(this.vehicle.data.field_opties[i].url, i)
     }

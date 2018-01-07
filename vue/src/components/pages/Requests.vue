@@ -55,14 +55,14 @@ export default {
     }
   },
   created () {
-    this.$store.url.pathname = `bookings/owner/${this.profileId}`
+    this.$store.state.url.pathname = `bookings/owner/${this.profileId}`
     axios.get(`${this.$store.state.url}?_format=json`)
       .then(({data: response}) => {
+        this.requests = response
         for (let i = 0; i < response.length; i++) {
           var url = response[i].field_voertuig[0].url
           this.getVehicle(url, i)
         }
-        this.requests = response
       })
       .catch(({message: error}) => { this.message.error = error })
   },
@@ -79,7 +79,7 @@ export default {
     },
     getVehicle: function (path, i) {
       let self = this
-      this.$store.url.pathname = path
+      this.$store.state.url.pathname = path
       axios.get(`${this.$store.state.url}?_format=json`)
         .then(({data: response}) => {
           self.requests[i].vehicle = [response]
@@ -88,13 +88,13 @@ export default {
         .catch(({message: error}) => { self.message.error = error })
     },
     changeState: function (request) {
-      this.$store.url.pathname = `efiara/bookings/${request.id[0].value}`
+      this.$store.state.url.pathname = `efiara/bookings/${request.id[0].value}`
       axios.patch(`${this.$store.state.url}?_format=hal_json`,
         {
           'field_status': {
             'value': request.field_status[0].value
           }
-        }, this.$store.headers
+        }, this.$store.state.headers
       )
         .then(response => {
           console.log('Status is aangepast')

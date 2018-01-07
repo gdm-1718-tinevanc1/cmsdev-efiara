@@ -10,7 +10,7 @@
            <div class="booking">  
               <p class="booking__price"><span class="bold">Totaal: € {{booking.field_prijs[0].value}}</span></p>
               <i class="fa fa-check request__check" v-bind:class="booking.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
-                <select v-if="booking.field_status[0].value == 'Afgekeurd'" 
+                <select v-if="booking.field_status[0].value !== 'Afgekeurd'" 
                 @change="changeState(booking)" class="dropdown" v-model="booking.field_status[0].value">
                   <option value="Geannuleerd">Geannuleerd</option>
                   <option value="In afwachting">In afwachting</option>

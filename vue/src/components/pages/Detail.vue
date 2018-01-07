@@ -11,14 +11,15 @@
               </agile>
               <p class="price--big--detail"><span class="price big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
               <p class="location">{{ vehicle.field_locatie[0].value}}</p> 
-              <p class="owner">{{ owner.name[0].value}}</p> 
+
+              <router-link :to="{ name: 'Profile', params: { id: owner.uid[0].value}}"> <p class="owner">{{ owner.name[0].value}}</p> </router-link>
               <p class="clear"></p>
         
        <div class="tabs">
-             <a @click="clickTab('details')" id="detailsButton" class="tabs__button tabs__button--active col s6">Details</a>
-             <a @click="clickTab('voorwaarden')" id="voorwaardenButton" class="tabs__button col s6">Voorwaarden</a>
-             <a @click="clickTab('review')" id="reviewButton" class="tabs__button col s6">Review</a>
-             <a @click="clickTab('kaart')" id="kaartButton" class="tabs__button col s6">Kaart</a>
+          <a @click="clickTab('details')" id="detailsButton" class="tabs__button tabs__button--active col s6">Details</a>
+          <a @click="clickTab('voorwaarden')" id="voorwaardenButton" class="tabs__button col s6">Voorwaarden</a>
+          <a @click="clickTab('review')" id="reviewButton" class="tabs__button col s6">Review</a>
+          <a @click="clickTab('kaart')" id="kaartButton" class="tabs__button col s6">Kaart</a>
         </div>
 
        <div id="details" class="tabview tabview—active">

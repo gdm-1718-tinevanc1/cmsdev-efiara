@@ -15,6 +15,7 @@
               <div class="message--succes">{{message.succes}}</div>
             </div>
             <div v-if="vehicles.length == 0">Er zijn geen voertuigen beschikbaar volgens jouw wensen.</div>
+            {{test}}
         </div>
     </div>
 </template>
@@ -36,12 +37,12 @@ export default {
         error: '',
         succes: ''
       },
+      test: '',
       startdate: this.$route.params.startdate,
       enddate: this.$route.params.enddate
     }
   },
   created () {
-    console.log(this.$route.params.place)
     this.$store.state.url.pathname = `vehicles/place/${this.$route.params.place}`
     axios.get(`${this.$store.state.url}?_format=json`)
       .then(({data: response}) => {
@@ -86,12 +87,30 @@ export default {
               this.vehicles[i].available = true
             } else {
               this.vehicles[i].available = false
+              // this.$set(this.vehicles[i].available, false)
+              this.test = ' '
+              // this.$set(this.test, 'test')
               break
             }
           }
         })
         .catch(({message: error}) => { this.message.error = error })
     }
+  },
+  watch: {
+    /* vehicles: {
+      handler: function (val) {
+        this.vehicles = val
+        console.log(val)
+        console.log(val[1].available)
+      },
+      deep: true
+    },
+    test (val) {
+      alert('test')
+      this.test = val
+      alert('2:', this.test)
+    } */
   }
 }
 </script>

@@ -30,6 +30,7 @@ export default {
       field_opties: []
     }
   },
+  countries: {},
   // get vehicle edit 4x
   getVehicleId (id) {
     store.state.url.pathname = `efiara/vehicles/${id}`
@@ -49,5 +50,12 @@ export default {
       .catch(error => {
         this.message.error = error.response.data
       })
+  },
+
+  getCountries () {
+    store.state.url.pathname = `taxonomie/landen`
+    axios.get(`${store.state.url}?_format=hal_json`)
+      .then(({data: response}) => { this.countries = response })
+      .catch(({message: error}) => { this.message.error = error })
   }
 }

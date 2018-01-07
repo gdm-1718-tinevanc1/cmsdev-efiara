@@ -121,16 +121,27 @@
   border: 1px solid $error-color !important;
 }
 
+.form--book, .form--create{
+  .vdp-datepicker__calendar{
+    margin-left: 12.5%;
+    margin-top:5px;
 
-.vdp-datepicker__calendar{
-  margin-left: 12.5%;
-  margin-top:5px;
+    .cell.highlighted{
+      background: lighten($primary-color, 20%);
+    }
+    .cell.selected, .cell.selected.highlighted, .cell.selected:hover{
+      background: $primary-color;
+    }
+  }
 }
 
 .form--create{
   ul{
     margin-left: 12.5%;
     display: inline-block;
-
   }
+}
+/* Change the white to any color ;) */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px lighten($primary-color, 40%) inset;
 }

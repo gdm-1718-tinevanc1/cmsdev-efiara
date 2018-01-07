@@ -17,7 +17,7 @@
            :class="{'input': true, 'is-danger': errors.has('plaats') }"><br>
 
           <label for="land">Land</label>
-          <select name="land" v-validate="'required'" placeholder="Land" v-model="vehicle.data.field_opties[0].target_id" 
+          <select name="land" v-validate="'required'" placeholder="Land" v-model="vehicle.data.field_land[0].target_id" 
            :class="{'input': true, 'is-danger': errors.has('land') }"><br>
               <option value="" disabled>Kies jouw land</option>
               <option v-for="country in countries" :value="country.tid[0].value">
@@ -76,6 +76,7 @@ export default {
   created: function () {
     Requests.message.error = ''
     Requests.message.succes = ''
+    Requests.getCountries()
     this.newVehicle = Main.checkCreateOrEdit(this.$route)
 
     this.$store.state.url.pathname = `taxonomie/landen`

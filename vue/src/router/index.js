@@ -11,6 +11,7 @@ import MyVehicles from '@/components/pages/Myvehicles'
 import Bookings from '@/components/pages/Bookings'
 import Chargingpoints from '@/components/pages/Chargingpoints'
 import Profile from '@/components/pages/Profile'
+import ProfileEdit from '@/components/pages/ProfileEdit'
 import Info from '@/components/pages/Info'
 import Requests from '@/components/pages/Requests'
 
@@ -73,6 +74,11 @@ export default new Router({
       path: '/profile/:id',
       name: 'Profile',
       component: Profile
+    },
+    {
+      path: '/profile/edit/:id',
+      name: 'ProfileEdit',
+      component: ProfileEdit
     },
     {
       path: '/info',

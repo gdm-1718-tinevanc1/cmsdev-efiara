@@ -56,9 +56,9 @@ export default{
   },
 
   register (creds) {
-    this.$store.state.url.pathname = 'user/register'
+    store.state.url.pathname = 'user/register'
     this.credsLogin = creds
-    axios.post(`${this.$store.url}?_format=hal_json`, creds)
+    axios.post(`${store.state.url}?_format=hal_json`, creds)
       .then(response => {
         // this.message.succes = 'Geregistreerd.'
         let credentials = {'name': this.credsLogin.name.value, 'pass': this.credsLogin.pass.value}

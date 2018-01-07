@@ -84,19 +84,22 @@ export default {
     }
   },
   created () {
-    console.log(this.$children)
     this.$store.state.url.pathname = `efiara/vehicles/${this.vehicleId}`
     axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => {
-        for (let i = 0; i < response.field_niet_beschikbaar.length; i++) {
-          this.state.disabled_startdate.dates[i] = new Date(response.field_niet_beschikbaar[i].value)
-        }
         this.vehicle = response
+        if (response.field_niet_beschikbaar) {
+          for (let i = 0; i < response.field_niet_beschikbaar.length; i++) {
+            this.state.disabled_startdate.dates[i] = new Date(response.field_niet_beschikbaar[i].value)
+          }
+        }
       })
       .catch(({message: error}) => { this.message.error = error })
-    this.$store.state.url.pathname = `bookings_active/vehicle/${this.vehicleId}/goedgekeurd,in afwachting`
+    this.$store.state.url.pathname = `bookings_active/vehicle/${this.vehicleId}/goedgekeurd,in+afwachting`
     axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => {
+        console.log(response)
+        console.log(this.$store.state.url)
         for (let i = 0; i < response.length; i++) {
           this.state.disabled_startdate.ranges[i] = {
             from: new Date(response[i].name[0].value),
@@ -109,7 +112,6 @@ export default {
   methods: {
     submit: function () {
       this.$validator.validateAll().then((result) => {
-        console.log(this.data_book.startdate)
         this.$store.state.url.pathname = 'entity/bookings'
         axios.post(`${this.$store.state.url}?_format=hal_json`,
           {
@@ -144,10 +146,11 @@ export default {
       this.state.disabled_enddate.to = this.data_book.startdate
       let maxdays = this.vehicle.field_verhuurdagen[0].value
       let enddate = moment(this.data_book.startdate).add(maxdays - 1, 'days')
+      // console.log(this.state.disabled_enddate)
       this.state.disabled_enddate.from = enddate._d
       let stop = false
       for (let i = 0; i < maxdays && !stop; i++) {
-        let date = moment(this.data_book.startdate).add(i + 1, 'days')
+        let date = moment(this.data_book.startdate).add(i, 'days')
         let count = 0
         if (this.state.disabled_startdate.dates.length > this.state.disabled_startdate.ranges) {
           count = this.state.disabled_startdate.dates.length
@@ -158,7 +161,7 @@ export default {
           let formatDate1 = moment(this.state.disabled_startdate.dates[i]).format('YYYY-MM-DD')
           let formatDate2 = moment(this.state.disabled_startdate.ranges[i].from).format('YYYY-MM-DD')
           if (formatDate1 === moment(date).format('YYYY-MM-DD') || formatDate2 === moment(date).format('YYYY-MM-DD')) {
-            let newEnddate = moment(date).subtract(1, 'days')
+            let newEnddate = moment(date)
             this.state.disabled_enddate.from = newEnddate._d
             stop = true
           }
