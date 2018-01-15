@@ -3,131 +3,30 @@
         <div class="vehicle--detail">  
           <div class="message--error">{{message.error}}</div>
           <div class="message--succes">{{message.succes}}</div>
-
-              <agile>     
-                  <div class="slide" v-if="vehicle.field_afbeelding.length"  v-for="image in vehicle.field_afbeelding">
-                      <img class="detail__image" :src="image.url"> 
-                  </div>
-              </agile>
-              <p class="price--big--detail"><span class="price big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
-              <p class="location">{{ vehicle.field_locatie[0].value}}</p> 
-
-              <router-link :to="{ name: 'Profile', params: { id: owner.uid[0].value}}"> <p class="owner">{{ owner.name[0].value}}</p> </router-link>
-              <p class="clear"></p>
+            <agile>     
+                <div class="slide" v-if="vehicle.field_afbeelding_data.length"  v-for="image in vehicle.field_afbeelding_data">
+                    <img class="detail__image" :src="image.value"> 
+                </div>
+            </agile>
+              
+            <p class="price--big--detail"><span class="price big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
+            <p class="location">{{ vehicle.field_locatie[0].value}}</p> 
+            
+            <router-link :to="{ name: 'Profile', params: { id: owner.uid[0].value}}"> <p class="owner">{{ owner.name[0].value}}</p> </router-link>
+            <p class="clear"></p>
         
        <div class="tabs">
           <a @click="clickTab('details')" id="detailsButton" class="tabs__button tabs__button--active col s6">Details</a>
-          <a @click="clickTab('voorwaarden')" id="voorwaardenButton" class="tabs__button col s6">Voorwaarden</a>
+          <a @click="clickTab('conditions')" id="voorwaardenButton" class="tabs__button col s6">Voorwaarden</a>
           <a @click="clickTab('review')" id="reviewButton" class="tabs__button col s6">Review</a>
-          <a @click="clickTab('kaart')" id="kaartButton" class="tabs__button col s6">Kaart</a>
+          <a @click="clickTab('map')" id="kaartButton" class="tabs__button col s6">Kaart</a>
         </div>
 
-       <div id="details" class="tabview tabview—active">
-          <p class="price">€ {{vehicle.field_prijs[0].value}}/dag</p>
-          <hr>
-            <h4>Technische eigenschappen</h4>
-            <table class="tableDetail">
-                <tr>
-                  <td>Type</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Jaar</td>
-                  <td>{{ vehicle.field_inschrijvingsjaar[0].value}}</td>
-                </tr>
-                <tr>
-                  <td>Kilometerteller</td>
-                  <td>{{ vehicle.field_kilometerstand[0].value}}</td>
-                </tr>
-                <tr>
-                  <td>Versnelling</td>
-                  <td>{{ vehicle.field_versnellingsbak[0].value}}</td>
-                </tr>
-                <tr>
-                  <td>Deuren</td>
-                  <td>{{ vehicle.field_deuren[0].value}}</td>
-                </tr>
-                <tr>
-                  <td>Zitplaatsen</td>
-                  <td>{{ vehicle.field_zitplaatsen[0].value}}</td>
-                </tr>
-            </table>
-          <hr>
-            <h4>Opties en accessoires </h4>
-              <ul v-for="option in options">
-                <li>{{ option.name[0].value}}</li>
-            </ul>
-      </div>
-
-
-       <div id="voorwaarden" class="tabview">
-       <table class="tableDetail">
-                <tr>
-                  <td>Maximale verhuurdagen</td>
-                  <td>{{ vehicle.field_verhuurdagen[0].value}} dagen</td>
-                </tr>
-                <tr>
-                  <td>Maximale kilometers per dag</td>
-                  <td>{{ vehicle.field_kilometers_per_dag[0].value}} km/dag</td>
-                </tr>
-                <tr>
-                  <td>Minimum leeftijd</td>
-                  <td>{{ vehicle.field_min_leeftijd[0].value}} jaar</td>
-                </tr>
-            </table>
-       </div>
-
-       <div id="review" class="tabview">
-        <div class="review--total">Totaal: <star-rating class="right" :rating="reviewTotal" :star-size="20" :read-only="true" :show-rating="false"></star-rating></div>
-        <hr>
-        <div class="review--title">Reviews: </div>
-        <div class="review" v-for="review in reviews">
-          <star-rating class="right" :rating="review.field_score[0].value" :star-size="20" :read-only="true" :show-rating="false"></star-rating>
-          <div class="bold">{{review.name[0].value}}</div>
-          {{review.field_commentaar[0].value}}
-        </div>
-        <form v-if="!checkAuthVehicle" class="form--review" on:submit.prevent="submitReview" data-vv-scope="review">
-          <hr>
-          <p>Geef jouw mening:</p>
-          <star-rating name="rating" @rating-selected="validateRating" v-model="reviewCredentials.score" :star-size="20" :show-rating="false"></star-rating>
-          <label for="titel">Titel</label><br>
-          <input name="titel" id="titel" placeholder="titel" v-validate="'required'" v-model="reviewCredentials.title"><br>
-
-          <label for="commentaar">Commentaar</label><br>
-          <textarea name="commentaar" id="commentaar" placeholder="commentaar"  rows="4" cols="50" v-validate="'required'" v-model="reviewCredentials.comment"></textarea>
-
-
-          <div class="message--error">
-            <span>
-              {{message.validate_error}}
-            </span>
-            <ul v-for="error in errors.all()">
-                <li>{{error}}</li>
-              </ul>
-          </div>
-          <div class="btn--primary"><a v-validate="'required'" @click="submitReview">Mening delen</a></div>
-        </form>
-       </div>
-
-       <div id="kaart" class="tabview">
-        <gmap-map
-          :center="center"
-          :zoom="7"
-          map-type-id="terrain"
-          style="width: 100%; height: 280px"
-        >
-        <gmap-marker
-            :key="index"
-            v-for="(m, index) in markers"
-            :position="m.position"
-            :clickable="true"
-			      :optimized="false",
-            :draggable="false"
-            @click="center=m.position"
-          ></gmap-marker>
-        </gmap-map>
-       </div>
-      </div>
+        <DetailsTab :vehicle="vehicle" :options="options"></DetailsTab>
+        <ConditionsTab :vehicle="vehicle"></ConditionsTab>
+        <ReviewTab :reviews="reviews" :reviewTotal="reviewTotal"></ReviewTab>
+        <MapTab :markers="markers" :center="center" :checkAuthVehicle="checkAuthVehicle" v-bind:getReviews="getReviews()"></MapTab>
+      </div> 
 
       <div v-if="checkAuthVehicle">
         <div class="btn--primary--bottom">
@@ -142,40 +41,30 @@
         <div class="btn--primary--bottom"><a @click="hire">Dit voertuig huren</a></div>
       </div>
 
-
     </div>
 </template>
 
 
 <script>
+import StarRating from 'vue-star-rating'
 import Auth from '../../auth.js'
 import axios from 'axios'
-import StarRating from 'vue-star-rating'
+import DetailsTab from '../detail_tabs/detailsTab'
+import ConditionsTab from '../detail_tabs/conditionsTab'
+import MapTab from '../detail_tabs/mapTab'
+import ReviewTab from '../detail_tabs/reviewTab'
 
-/*
-import Vue from 'vue'
-import axios from 'axios'
-import Auth from '../../auth.js'
-import VueAgile from 'vue-agile'
-import * as VueGoogleMaps from 'vue2-google-maps'
-import StarRating from 'vue-star-rating'
-
-Vue.use(VueAgile)
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: 'AIzaSyDeyj-ODZCNmRRJbjgmIQKOKgE4Bin0zBg',
-    libraries: 'places'
-  }
-})
-Vue.component('star-rating', StarRating)
-*/
 export default {
   beforeCreate: function () {
     document.body.className = 'background--white'
   },
   name: 'detail',
   components: {
-    StarRating
+    StarRating,
+    DetailsTab,
+    ConditionsTab,
+    MapTab,
+    ReviewTab
   },
   data: function () {
     return {
@@ -188,16 +77,10 @@ export default {
       address: '',
       message: {
         error: '',
-        succes: '',
-        validate_error: ''
+        succes: ''
       },
       rating: null,
       reviewTotal: null,
-      reviewCredentials: {
-        title: '',
-        comment: '',
-        score: null
-      },
       center: {lat: 10.0, lng: 10.0},
       markers: [
         {position: {lat: 10.0, lng: 10.0}}
@@ -245,6 +128,7 @@ export default {
         localStorage.setItem('Book_vehicleId', this.vehicle.id[0].value)
         this.$router.push({name: 'Book'})
       } else {
+        this.$store.state.error_authenticated = 'Je moet aangemeld zijn om een voertuig te boeken. Meld je aan.'
         this.$router.push({name: 'Login'})
       }
     },
@@ -274,13 +158,14 @@ export default {
           this.options[i] = response
         })
         .catch(({message: error}) => { this.message.error += error })
-    },
+    }/* ,
     submitReview: function () {
       if (Auth.user.authenticated) {
         // this.$validator.validateAll('review')
         this.$validator.validateAll('review').then((result) => {
           if (this.reviewCredentials.score) {
             this.$store.state.url.pathname = '/entity/review'
+            console.log(this.$store.state.headers)
             axios.post(`${this.$store.state.url}?_format=hal_json`,
               {
                 'name': {
@@ -300,18 +185,19 @@ export default {
               .then(({data: response}) => {
                 this.getReviews()
               })
-              .catch(({message: error}) => { this.message.error = error })
+              .catch(({error}) => { this.message.error = error })
           } else {
             this.message.validate_error = 'score is verplicht'
           }
         })
       } else {
+        this.$store.state.error_authenticated = 'Je moet aangemeld zijn om een review te kunnen toevoegen. Meld je aan.'
         this.$router.push({name: 'Login'})
       }
-    },
+    } ,
     validateRating: function () {
       this.message.validate_error = ''
-    }
+    } */
   },
   computed: {
     checkAuthVehicle: function () {
@@ -329,5 +215,10 @@ export default {
 
 
 <style lang="scss">
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 </style>

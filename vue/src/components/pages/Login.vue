@@ -2,6 +2,7 @@
   <div class="container">
      <div class="login">
         <img class="logo--big" src="../../assets/logo.png">
+        <div class="message--error">{{$store.state.error_authenticated}}</div>
         <form class="form--login">
           <label for="gebruikersnaam">Gebruikersnaam</label><br>
           <input name="gebruikersnaam" id="gebruikersnaam" placeholder="Gebruikersnaam" v-validate="'required'" v-model="credentials.username" :class="{'input': true, 'is-danger': errors.has('gebruikersnaam') }"><br>
@@ -52,7 +53,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 body.background--image{
   margin: 0;
   background-image: url("../../assets/background.png");

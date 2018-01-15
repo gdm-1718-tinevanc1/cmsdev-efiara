@@ -7,13 +7,11 @@
             <input name="plaats" type="text" id="place" placeholder="Plaats" v-validate="'required'" v-model="filter.place" :class="{'input': true, 'is-danger': errors.has('plaats') }" >
           </label><br>
 
-          <label id="label--begindate">
+          <label id="label--begindate"></label>
           <datepicker v-on:input="validateRating" v-validate="'required'" v-model="filter.startdate" :disabled="state.disabled" language="nl" type="date" name="begindatum" id="begindate" placeholder="Begin datum" :class="{'input': true, 'is-danger': errors.has('begindatum') }"></datepicker>
-          </label>
 
-          <label id="label--enddate">
+          <label id="label--enddate"></label>
           <datepicker v-on:input="validateRating" v-validate="'required'" v-model="filter.enddate" :disabled="state.disabled" language="nl" type="date" name="einddatum" id="enddate" placeholder="Eind datum" :class="{'input': true, 'is-danger': errors.has('begindatum') }"></datepicker>
-          </label>
 
           <div class="message--error">
             <ul v-for="error in errors.all()">

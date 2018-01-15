@@ -45,6 +45,8 @@
             </option>
           </select>
 
+          <label for="afbeelding">Afbeelding (maximum 5)</label><br>
+          <input name="afbeelding" type="file" id="image" v-on:change="getImages()" placeholder="Afbeelding" multiple="multiple" width="48" height="48"  :class="{'input': true, 'is-danger': errors.has('afbeelding') }">
 
           <div class="message--succes">{{message.succes}}</div>
 
@@ -93,7 +95,8 @@ export default {
       newVehicle: null,
       vehicle: this.$store.state.create_vehicle,
       options: [],
-      activeOptions: []
+      activeOptions: [],
+      images: []
     }
   },
   created: function () {
@@ -123,6 +126,10 @@ export default {
           for (let i = 0; i < this.activeOptions.length; i++) {
             this.$store.state.create_vehicle.data.field_opties[i] = { 'target_id': this.activeOptions[i] }
           }
+          for (let i = 0; i < this.images.length; i++) {
+            this.$store.state.create_vehicle.data.field_afbeelding_data[i] = { 'value': this.images[i] }
+          }
+
           this.$router.push({name: 'Step2'})
         }
       })
@@ -132,6 +139,15 @@ export default {
       let field_opties = []
       for (let i = 0; i < this.activeOptions.length; i++) {
         field_opties[i] = { 'target_id': this.activeOptions[i] }
+      }
+      let field_afbeelding_data;
+      if (this.images.length) {
+        for (let i = 0; i < this.images.length; i++) {
+          field_afbeelding_data = []
+          field_afbeelding_data[i] = { 'value': this.images[i] }
+        }
+      } else {
+        // field_afbeelding_data = ''
       }
       let creds = {
         'name': {
@@ -155,15 +171,16 @@ export default {
         'field_kilometerstand': {
           'value': this.vehicle.data.field_kilometerstand[0].value
         },
-        field_opties
-      }
-      console.log(creds)
-      // Requests.patchVehicle(this.$route.params.id, creds)
-      this.$validator.validateAll().then((result) => {
-        if (result) {
-          Requests.patchVehicle(this.$route.params.id, creds)
+        field_opties,
+        field_afbeelding_data
         }
-      })
+        // console.log(creds)
+        // Requests.patchVehicle(this.$route.params.id, creds)
+        this.$validator.validateAll().then((result) => {
+          if (result) {
+            Requests.patchVehicle(this.$route.params.id, creds)
+          }
+        })
       /* eslint-enable camelcase */
     },
     getOptions: function (path, i) {
@@ -173,16 +190,42 @@ export default {
           this.activeOptions.push(response.tid[0].value)
         })
         .catch(({message: error}) => { this.message.error = error })
+    },
+    getImages: function () {
+      let input = document.getElementById('image')
+      let images = []
+      if (input.files.length > 5) {
+        this.message.error = 'Je kan maar maximum 5 afbeeldingen uploaden'
+      } else {
+        for (let i = 0; i < input.files.length; i++) {
+          let fr = new FileReader()
+          fr.onload = function (e) {
+            let bfile = e.target.result
+            images.push(bfile)
+          }
+          fr.readAsDataURL(input.files[i])
+        }
+        this.images = images
+        console.log(this.images)
+      }
     }
   },
   watch: {
     '$route.params' (newParams) {
       this.newVehicle = Main.checkCreateOrEdit(newParams)
+    },
+    options: function (newParams) {
+      this.options = newParams
     }
   }
 }
 </script>
 
 <style lang="scss">
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 </style>

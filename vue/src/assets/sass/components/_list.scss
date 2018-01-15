@@ -7,6 +7,12 @@ ul {
         margin: 0 10px;
     }
 }
-  
-  
-  
+
+#conditions ul {
+    padding-left: 40px;
+    
+    li {
+        display: list-item;
+        list-style-type: square;
+    }
+}

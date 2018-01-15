@@ -3,13 +3,13 @@
         <div>
             <h5>Mijn voertuigen:</h5>
             <div v-if="vehicles.length == 0">Je hebt nog geen voertuigen toegevoegd!
-              <router-link to="//vehicles/create/step1" exact><a class="link--login">Voertuig toevoegen</a> </router-link>
+              <div class="btn--primary"><router-link to="/vehicles/create/step1" exact>Voertuig toevoegen </router-link></div>
             </div>
 
             <div v-for="vehicle in vehicles">
                 <div class="vehicle">             
                 <router-link :to="{ name: 'Detail', params: { id: vehicle.id[0].value }}">
-                    <img v-if="vehicle.field_afbeelding.length" :src="vehicle.field_afbeelding[0].url"> 
+                    <img v-if="vehicle.field_afbeelding_data.length" :src="vehicle.field_afbeelding_data[0].value"> 
                     <p class="price--big"><span class="big">€ {{ vehicle.field_prijs[0].value}}</span>/dag</p>
                     <p class="title">{{ vehicle.name[0].value}} {{ vehicle.field_model[0].value}},
                     {{ vehicle.field_locatie[0].value}}</p> 

@@ -31,13 +31,16 @@
               </option>
           </select>
 
-
           <h5>Contact</h5>
           <label for="email">E-mail</label><br> <!-- v-validate="'required|email'" -->
-          <input name="email" id="email" placeholder="E-mail" :class="{'input': true, 'is-danger': errors.has('email') }"><br>
+          <input name="email" id="email" placeholder="E-mail" v-model="creds.mail[0].value" :class="{'input': true, 'is-danger': errors.has('email') }"><br>
 
           <label for="telefoonnummer">Telefoonnummer (+32)</label><br>
           <input name="telefoonnummer" id="nummer" placeholder="Telefoonnummer" v-model="creds.field_telefoonnummer[0].value" v-validate="'required|numeric'" :class="{'input': true, 'is-danger': errors.has('telefoonnummer') }"><br>
+          
+          <h5>Bevestig met je wachtwoord</h5>
+          <label for="wachtwoord">Jouw wachtwoord</label><br>
+          <input name="wachtwoord" type="password" id="pass" placeholder="Wachtwoord" v-model="creds.pass[0].existing" v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('wachtwoord') }"><br>
 
           <div class="message--error"> <br>
             <ul v-for="error in errors.all()">
@@ -50,7 +53,7 @@
           <div class="message--succes">{{message.succes}}</div>
 
            <div class="btn--primary"><a @click="submit()">Aanpassen</a></div>
-           
+           <router-link class="link--changepass" :to="{ name: 'ChangePass', params: { id: profileId}}">Verander je wachtwoord</router-link>
         </form>
     </div>
   </div>
@@ -80,23 +83,26 @@ export default {
           'value': ''
         } ],
         'field_telefoonnummer': [ {
-          'value': ''
+          'value': 0
         } ],
         'field_geboortedatum': [ {
           'value': ''
         } ],
         'field_rijbewijsnummer': [ {
-          'value': ''
+          'value': 0
         } ],
         'field_uitgiftedatum': [ {
           'value': ''
         } ],
         'field_land_uitgifte': [ {
           'target_id': ''
-        } ]/* ,
+        } ],
         'mail': [ {
           'value': ''
-        } ], */
+        } ],
+        'pass': [ {
+          'existing': ''
+        } ]
       },
       message: {
         error: '',
@@ -108,8 +114,8 @@ export default {
   },
   created () {
     Requests.getCountries()
-    this.$store.state.url.pathname = `user/${this.profileId}`
-    axios.get(`${this.$store.state.url}?_format=json`)
+    this.$store.state.url.pathname = `user/${localStorage.getItem('profileId')}`
+    axios.get(`${this.$store.state.url}?_format=json`, this.$store.state.headers)
       .then(({data: response}) => {
         this.user = response
         this.creds.name[0].value = response.name[0].value
@@ -117,7 +123,11 @@ export default {
         this.creds.field_voornaam[0].value = response.field_voornaam[0].value
         this.creds.field_telefoonnummer[0].value = response.field_telefoonnummer[0].value
         this.creds.field_geboortedatum[0].value = response.field_geboortedatum[0].value
-        // this.creds.mail[0].value = response.mail[0].value
+        if (response.mail) {
+          this.creds.mail[0].value = response.mail[0].value
+        } else {
+          this.creds.mail[0].value = ''
+        }
         if (response.field_rijbewijsnummer[0]) {
           this.creds.field_rijbewijsnummer[0].value = response.field_rijbewijsnummer[0].value
         } else {
@@ -133,6 +143,7 @@ export default {
         } else {
           this.creds.field_land_uitgifte[0].target_id = response.field_land_uitgifte
         }
+        this.creds.pass[0].existing = ''
       })
       .catch(({message: error}) => { this.message.error = error })
 
@@ -143,15 +154,16 @@ export default {
   },
   methods: {
     submit: function () {
+      this.message.error = ''
       this.$validator.validateAll().then((result) => {
         if (result) {
           if (this.checkAuth) {
-            this.$store.state.url.pathname = `user/${this.profileId}`
+            this.$store.state.url.pathname = `user/${localStorage.getItem('profileId')}`
             axios.patch(`${this.$store.state.url}?_format=hal_json`, this.creds, this.$store.state.headers)
               .then(response => {
                 this.message.succes = 'Je profiel is aangepast'
               })
-              .catch(error => {
+              .catch(({message: error}) => {
                 this.message.error = error
               })
           } else {
@@ -163,8 +175,8 @@ export default {
   },
   computed: {
     checkAuth: function () {
-      let profileId = this.$route.params.id
-      let userId = localStorage.getItem('profileId')
+      let profileId = parseInt(this.$route.params.id)
+      let userId = parseInt(localStorage.getItem('profileId'))
       if (profileId === userId) {
         return true
       } else {
@@ -176,6 +188,11 @@ export default {
 </script>
 
 <style lang="scss">
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 
 </style>

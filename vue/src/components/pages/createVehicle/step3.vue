@@ -106,5 +106,10 @@ export default {
 </script>
 
 <style lang="scss">
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 </style>

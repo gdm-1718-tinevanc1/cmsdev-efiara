@@ -78,18 +78,20 @@ export const store = new Vuex.Store({
         field_straat: [ { value: '' } ],
         field_huisnummer: [ { value: '' } ],
         field_locatie: [ { value: '' } ],
-        field_land: [ { value: '' } ],
+        field_land: [ { target_id: '' } ],
         field_verhuurdagen: [ { value: '' } ],
         field_min_leeftijd: [ { value: '' } ],
         field_kilometers_per_dag: [ { value: '' } ],
         field_prijs: [ { value: '' } ],
         field_eigenaar: [ { value: '' } ],
-        field_afbeelding: [ { value: '' } ],
         field_niet_beschikbaar: [ { value: '' } ],
-        field_opties: []
+        field_opties: [],
+        field_afbeelding_data: []
       }
     },
-    headers: {}
+    headers: {},
+    error_authenticated: '',
+    notification: null
   }
 })
 

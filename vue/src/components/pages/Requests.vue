@@ -1,13 +1,12 @@
 <template>
   <div class="container">
      <div class="requests">
-        <p style="display:none">{{vehicle}}</p>
         <h4 class="title--page">Aanvragen</h4>
         <div class="message--error">{{message.error}}</div>
         <div class="message--succes">{{message.succes}}</div>
-        <div v-if="requests.length == 0">Men heeft jouw voertuigen nog niet geboekt!</div>
+        <div v-if="!requests.length">Men heeft jouw voertuigen nog niet geboekt!</div>
 
-        <div v-for="request in orderedRequests">
+        <div v-for="request in orderedRequests" v-if="requests.length && checkDate(request)">
            <div class="request">    
               <i class="fa fa-check request__check" v-bind:class="request.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
                 <select v-if="request.field_status[0].value !== 'Geannuleerd'" 
@@ -21,11 +20,31 @@
               <router-link :to="{ name: 'Detail' , params: { id: request.vehicle[0].id[0].value }}"> 
                 <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p> 
               </router-link> 
-              <p class="bold request__adress">{{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}, {{request.vehicle[0].field_land[0].value}}</p>       
+            <router-link :to="{ name: 'Profile', params: { id: request.field_huurder[0].target_id}}">{{request.renter[0].name[0].value}}</router-link>
+              <p class="bold request__adress"> {{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ request.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ request.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.field_eind_datum[0].value | date("%R")}}</span> </p>
               <p class="request__price"><span class="bold">€ {{request.vehicle[0].field_prijs[0].value}}/km</span></p>
-             <!-- <p>{{request.field_status[0].value}}</p> -->
+           </div>
+        </div>
+
+
+       <div class="request__header" v-if="requests.length" @click="show = !show">Geschiedenis
+         <i v-if="!show" class="fa fa-angle-down" aria-hidden="true"></i>
+          <i v-else class="fa fa-angle-up" aria-hidden="true"></i> 
+         </div>
+        <div v-for="request in orderedRequests" v-if="show && !checkDate(request)">
+           <div class="request">    
+              <i class="fa fa-check request__check" v-bind:class="request.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
+              </i>
+              <router-link :to="{ name: 'Detail' , params: { id: request.vehicle[0].id[0].value }}"> 
+                <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p> 
+              </router-link> 
+            <router-link :to="{ name: 'Profile', params: { id: request.field_huurder[0].target_id}}">{{request.renter[0].name[0].value}}</router-link>
+              <p class="bold request__adress"> {{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}</p>       
+              <p class="request__date">van <span class="bold">{{ request.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.name[0].value | date("%R")}}</span> 
+              tot <span class="bold">{{ request.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.field_eind_datum[0].value | date("%R")}}</span> </p>
+              <p class="request__price"><span class="bold">€ {{request.vehicle[0].field_prijs[0].value}}/km</span></p>
            </div>
         </div>
     </div>
@@ -35,7 +54,8 @@
 <script>
 import * as _ from 'lodash'
 import axios from 'axios'
-
+import Requests from '../../requests.js'
+import * as moment from 'moment'
 export default {
   beforeCreate: function () {
     document.body.className = 'background--image'
@@ -43,28 +63,18 @@ export default {
   name: 'requests',
   data () {
     return {
-      requests: {
-        vehicle: []
-      },
+      requests: Requests.requests,
       message: {
         error: '',
         succes: ''
       },
-      vehicle: [],
-      profileId: localStorage.getItem('profileId')
+      profileId: localStorage.getItem('profileId'),
+      show: false
     }
   },
   created () {
-    this.$store.state.url.pathname = `bookings/owner/${this.profileId}`
-    axios.get(`${this.$store.state.url}?_format=json`)
-      .then(({data: response}) => {
-        this.requests = response
-        for (let i = 0; i < response.length; i++) {
-          var url = response[i].field_voertuig[0].url
-          this.getVehicle(url, i)
-        }
-      })
-      .catch(({message: error}) => { this.message.error = error })
+    this.$store.state.notification = null
+    Requests.getRequests()
   },
   methods: {
     dropdown: function (event) {
@@ -76,16 +86,6 @@ export default {
           dropdown[i].className = dropdown[i].className.replace(/\b open\b/g, '')
         }
       }
-    },
-    getVehicle: function (path, i) {
-      let self = this
-      this.$store.state.url.pathname = path
-      axios.get(`${this.$store.state.url}?_format=json`)
-        .then(({data: response}) => {
-          self.requests[i].vehicle = [response]
-          self.vehicle = response
-        })
-        .catch(({message: error}) => { self.message.error = error })
     },
     changeState: function (request) {
       this.$store.state.url.pathname = `efiara/bookings/${request.id[0].value}`
@@ -106,6 +106,15 @@ export default {
         .catch(error => {
           this.message.error = error.response.data.message
         })
+    },
+    checkDate: function (booking) {
+      let bookingDate = moment(booking.name[0].value)
+      let today = moment(new Date())
+      if (bookingDate - today > 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   computed: {

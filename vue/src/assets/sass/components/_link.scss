@@ -1,12 +1,22 @@
-.link--login{
+.link{
     margin-top: 10px;
     float: right;
     margin-right: 12.5%;
+    text-decoration: none;  
+}
+
+
+.link--login{
+    @extend .link;
     color: #ffffff;
-    text-decoration: none;
 }
 
 a{
     text-decoration: none;
     color: darken($primary-color, 30%);
+}
+
+.link--changepass{
+    margin: 15px 12.5%;
+    @extend .link;
 }

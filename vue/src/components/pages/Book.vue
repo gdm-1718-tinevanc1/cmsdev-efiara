@@ -37,7 +37,6 @@
 import Datepicker from 'vuejs-datepicker'
 import * as moment from 'moment'
 import axios from 'axios'
-
 /* import axios from 'axios'
 import * as moment from 'moment'
 Vue.use(require('vue-moment')) */
@@ -84,22 +83,10 @@ export default {
     }
   },
   created () {
-    this.$store.state.url.pathname = `efiara/vehicles/${this.vehicleId}`
-    axios.get(`${this.$store.state.url}?_format=hal_json`)
-      .then(({data: response}) => {
-        this.vehicle = response
-        if (response.field_niet_beschikbaar) {
-          for (let i = 0; i < response.field_niet_beschikbaar.length; i++) {
-            this.state.disabled_startdate.dates[i] = new Date(response.field_niet_beschikbaar[i].value)
-          }
-        }
-      })
-      .catch(({message: error}) => { this.message.error = error })
     this.$store.state.url.pathname = `bookings_active/vehicle/${this.vehicleId}/goedgekeurd,in+afwachting`
     axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => {
-        console.log(response)
-        console.log(this.$store.state.url)
+        this.getVehicle()
         for (let i = 0; i < response.length; i++) {
           this.state.disabled_startdate.ranges[i] = {
             from: new Date(response[i].name[0].value),
@@ -141,6 +128,19 @@ export default {
           })
           .catch(({message: error}) => { this.message.error = error })
       })
+    },
+    getVehicle () {
+      this.$store.state.url.pathname = `efiara/vehicles/${this.vehicleId}`
+      axios.get(`${this.$store.state.url}?_format=hal_json`)
+        .then(({data: response}) => {
+          this.vehicle = response
+          if (response.field_niet_beschikbaar) {
+            for (let i = 0; i < response.field_niet_beschikbaar.length; i++) {
+              this.state.disabled_startdate.dates[i] = new Date(response.field_niet_beschikbaar[i].value)
+            }
+          }
+        })
+        .catch(({message: error}) => { this.message.error = error })
     },
     enddateDisabled () {
       this.state.disabled_enddate.to = this.data_book.startdate
@@ -194,4 +194,10 @@ export default {
 </script>
 
 <style lang="scss">
+body.background--image{
+  margin: 0;
+  background-image: url("../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 </style>

@@ -91,7 +91,7 @@ export default {
           this.$store.state.create_vehicle.data.field_straat[0].value = this.vehicle.data.field_straat[0].value
           this.$store.state.create_vehicle.data.field_huisnummer[0].value = this.vehicle.data.field_huisnummer[0].value
           this.$store.state.create_vehicle.data.field_locatie[0].value = this.vehicle.data.field_locatie[0].value
-          this.$store.state.create_vehicle.data.field_land[0].value = this.vehicle.data.field_land[0].target_id
+          this.$store.state.create_vehicle.data.field_land[0].target_id = this.vehicle.data.field_land[0].target_id
           this.$router.push({name: 'Step3'})
         }
       })
@@ -128,5 +128,10 @@ export default {
 </script>
 
 <style lang="scss">
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 </style>

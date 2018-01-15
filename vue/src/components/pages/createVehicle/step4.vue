@@ -100,74 +100,81 @@ export default {
         if (result) {
           this.$store.state.create_vehicle.data.field_prijs[0].value = this.vehicle.data.field_prijs[0].value
           this.$store.state.create_vehicle.data.field_eigenaar[0].target_id = this.userId
-          this.$store.state.create_vehicle.data.field_afbeelding[0].target_id = 27
           for (let i = 0; i < this.unavailableDays.length; i++) {
             this.$store.state.create_vehicle.data.field_niet_beschikbaar[i] = { 'value': this.unavailableDays[i] }
           }
-          // this.$store.state.create_vehicle.field_opties[0].value = this.vehicle.data.field_prijs[0].value
-          // this.$store.state.create_vehicle.field_niet_beschikbaar[0].value = this.vehicle.data.field_prijs[0].value
-          console.log(this.$store.state.create_vehicle.data)
 
+          let field_niet_beschikbaar = this.$store.state.create_vehicle.data.field_niet_beschikbaar
+          let field_afbeelding_data = this.$store.state.create_vehicle.data.field_afbeelding_data
+          console.log(this.$store.state.create_vehicle.data.field_afbeelding_data)
+          let field_opties = this.$store.state.create_vehicle.data.field_opties
           this.$store.state.url.pathname = 'entity/vehicles'
-          axios.post(`${this.$store.state.url}?_format=hal_json`, this.$store.state.create_vehicle.data
-            /* {
+          axios.post(`${this.$store.state.url}?_format=json`, this.$store.state.create_vehicle.data /* {
               'name': {
-                'value': this.$store.state.create_vehicle.name
+                'value': this.$store.state.create_vehicle.data.name[0].value
               },
               'field_model': {
-                'value': this.$store.state.create_vehicle.field_model
+                'value': this.$store.state.create_vehicle.data.field_model[0].value
               },
               'field_inschrijvingsjaar': {
-                'value': this.$store.state.create_vehicle.field_inschrijvingsjaar
+                'value': this.$store.state.create_vehicle.data.field_inschrijvingsjaar[0].value
               },
               'field_zitplaatsen': {
-                'value': this.$store.state.create_vehicle.field_zitplaatsen
+                'value': this.$store.state.create_vehicle.data.field_zitplaatsen[0].value
               },
               'field_deuren': {
-                'value': this.$store.state.create_vehicle.field_deuren
+                'value': this.$store.state.create_vehicle.data.field_deuren[0].value
               },
               'field_versnellingsbak': {
-                'value': this.$store.state.create_vehicle.field_versnellingsbak
+                'value': this.$store.state.create_vehicle.data.field_versnellingsbak[0].value
               },
               'field_kilometerstand': {
-                'value': this.$store.state.create_vehicle.field_kilometerstand
+                'value': this.$store.state.create_vehicle.data.field_kilometerstand[0].value
               },
               'field_straat': {
-                'value': this.$store.state.create_vehicle.field_straat
+                'value': this.$store.state.create_vehicle.data.field_straat[0].value
               },
               'field_huisnummer': {
-                'value': this.$store.state.create_vehicle.field_huisnummer
+                'value': this.$store.state.create_vehicle.data.field_huisnummer[0].value
               },
               'field_locatie': {
-                'value': this.$store.state.create_vehicle.field_locatie
+                'value': this.$store.state.create_vehicle.data.field_locatie[0].value
               },
               'field_land': {
-                'target_id': this.$store.state.create_vehicle.field_land
+                'target_id': this.$store.state.create_vehicle.data.field_land[0].target_id
               },
               'field_prijs': {
-                'value': this.$store.state.create_vehicle.field_prijs
+                'value': this.$store.state.create_vehicle.data.field_prijs[0].value
               },
               'field_kilometers_per_dag': {
-                'value': this.$store.state.create_vehicle.field_kilometers_per_dag
+                'value': this.$store.state.create_vehicle.data.field_kilometers_per_dag[0].value
               },
               'field_min_leeftijd': {
-                'value': this.$store.state.create_vehicle.field_min_leeftijd
+                'value': this.$store.state.create_vehicle.data.field_min_leeftijd[0].value
               },
               'field_verhuurdagen': {
-                'value': this.$store.state.create_vehicle.field_verhuurdagen
+                'value': this.$store.state.create_vehicle.data.field_verhuurdagen[0].value
               },
               'field_eigenaar': {
                 'target_id': this.userId
               },
-              'field_afbeelding': {
-                'target_id': 27
-              }
-            } */, this.$store.state.headers
+              'field_afbeelding_data': {
+                'value': this.$store.state.create_vehicle.data.field_afbeelding_data[0].value,
+                // 'value': this.$store.state.create_vehicle.data.field_afbeelding_data[1].value,
+                'value': this.$store.state.create_vehicle.data.field_afbeelding_data[1].value
+              },
+              /* 'field_opties': {
+                'target_id': 23
+              }, */
+              // field_afbeelding_data,
+              /* field_opties,
+              field_niet_beschikbaar 
+          } */, this.$store.state.headers
           )
             .then(({data: response}) => {
               this.message.succes = 'Jouw voertuig is succesvol toegevoegd'
             })
-            .catch((error) => { this.message.error = error.response.data.message })
+            .catch(({error}) => { this.message.error = error })
           /* axios.post('http://cmsdev.localhost/entity/file?_format=json', {
             '_links':
               {
@@ -197,7 +204,6 @@ export default {
         },
         field_niet_beschikbaar
       }
-      console.log(creds)
       // Requests.patchVehicle(this.$route.params.id, creds)
       this.$validator.validateAll().then((result) => {
         if (result) {
@@ -207,7 +213,6 @@ export default {
       /* eslint-enable camelcase */
     },
     getDates: function (date) {
-      console.log(this.state.highlighted.dates)
       if (this.unavailableDays.includes(moment(date).format('YYYY-MM-DD'))) {
         let index = this.unavailableDays.indexOf(moment(date).format('YYYY-MM-DD'))
         if (index > -1) {
@@ -230,5 +235,10 @@ export default {
 </script>
 
 <style lang="scss">
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 </style>

@@ -8,12 +8,16 @@
             <td>{{user.field_voornaam[0].value}} {{user.field_naam[0].value}}</td>
           </tr>
           <tr>
+            <td>E-mail</td>
+            <td> <span v-if="user.mail">{{user.mail[0].value}}</span></td>
+          </tr>
+          <tr>
             <td>Geboortedatum</td>
             <td>{{user.field_geboortedatum[0].value}}</td>
           </tr>
           <tr>
             <td>Uitgiftdatum rijbewijs</td>
-            <td v-if="user.field_uitgiftedatum[0]">{{user.field_uitgiftedatum[0].value}}</td>
+            <td> <span v-if="user.field_uitgiftedatum[0]">{{user.field_uitgiftedatum[0].value}}</span></td>
           </tr>
           </tr>
         </table>
@@ -42,7 +46,7 @@ export default {
   },
   created () {
     this.$store.state.url.pathname = `user/${this.$route.params.id}`
-    axios.get(`${this.$store.state.url}?_format=json`)
+    axios.get(`${this.$store.state.url}?_format=json`, this.$store.state.headers)
       .then(({data: response}) => { this.user = response })
       .catch(({message: error}) => { this.message.error = error })
   },
@@ -61,6 +65,11 @@ export default {
 </script>
 
 <style lang="scss">
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 
 </style>

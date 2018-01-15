@@ -40,7 +40,7 @@
                   <td>{{ activePoint.field_aantal_laadpunten[0].value}}</td>
                 </tr>
                 <tr>
-                  <td>Eingenaar</td>
+                  <td>Eigenaar</td>
                   <td>{{ activePoint.owner[0].name[0].value}}</td>
                 </tr>
                 <tr>
@@ -157,6 +157,10 @@ export default {
 </script>
 
 <style lang="scss">
-
-
+body.background--image{
+  margin: 0;
+  background-image: url("../../assets/background.png");
+  background-color: #000000;
+  color: #ffffff
+}
 </style>
