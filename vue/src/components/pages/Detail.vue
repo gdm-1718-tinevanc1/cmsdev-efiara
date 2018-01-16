@@ -24,8 +24,8 @@
 
         <DetailsTab :vehicle="vehicle" :options="options"></DetailsTab>
         <ConditionsTab :vehicle="vehicle"></ConditionsTab>
-        <ReviewTab :reviews="reviews" :reviewTotal="reviewTotal"></ReviewTab>
-        <MapTab :markers="markers" :center="center" :checkAuthVehicle="checkAuthVehicle" v-bind:getReviews="getReviews()"></MapTab>
+        <ReviewTab :reviews="reviews" :reviewTotal="reviewTotal" :checkAuth="checkAuth"></ReviewTab>
+        <MapTab :markers="markers" :center="center" v-bind:getReviews="getReviews()"></MapTab>
       </div> 
 
       <div v-if="checkAuthVehicle">
@@ -84,7 +84,8 @@ export default {
       center: {lat: 10.0, lng: 10.0},
       markers: [
         {position: {lat: 10.0, lng: 10.0}}
-      ]
+      ],
+      checkAuth: false
     }
   },
   created () {
@@ -158,54 +159,17 @@ export default {
           this.options[i] = response
         })
         .catch(({message: error}) => { this.message.error += error })
-    }/* ,
-    submitReview: function () {
-      if (Auth.user.authenticated) {
-        // this.$validator.validateAll('review')
-        this.$validator.validateAll('review').then((result) => {
-          if (this.reviewCredentials.score) {
-            this.$store.state.url.pathname = '/entity/review'
-            console.log(this.$store.state.headers)
-            axios.post(`${this.$store.state.url}?_format=hal_json`,
-              {
-                'name': {
-                  'value': this.reviewCredentials.title
-                },
-                'field_commentaar': {
-                  'value': this.reviewCredentials.comment
-                },
-                'field_score': {
-                  'value': this.reviewCredentials.score
-                },
-                'field_voertuig': {
-                  'target_id': this.id
-                }
-              }, this.$store.state.headers
-            )
-              .then(({data: response}) => {
-                this.getReviews()
-              })
-              .catch(({error}) => { this.message.error = error })
-          } else {
-            this.message.validate_error = 'score is verplicht'
-          }
-        })
-      } else {
-        this.$store.state.error_authenticated = 'Je moet aangemeld zijn om een review te kunnen toevoegen. Meld je aan.'
-        this.$router.push({name: 'Login'})
-      }
-    } ,
-    validateRating: function () {
-      this.message.validate_error = ''
-    } */
+    }
   },
   computed: {
     checkAuthVehicle: function () {
       let vehicleOwner = this.vehicle.field_eigenaar[0].target_id.toString()
       let userId = localStorage.getItem('profileId')
       if (vehicleOwner === userId) {
+        this.checkAuth = true
         return true
       } else {
+        this.checkAuth = false
         return false
       }
     }

@@ -38,43 +38,16 @@
 </template>
 
 <script>
-// import axios from 'axios'
-
 export default {
   name: 'detailsTab',
   props: ['vehicle', 'options'],
   data () {
     return {
-      // options: [],
       message: {
         error: '',
         succes: ''
       }
     }
-  },
-  created () {
-    /* console.log(this.vehicle)
-    for (var i = 0; i < this.vehicle.field_opties.length; i++) {
-      // this.getOptions(this.vehicle.field_opties[i].url, i)
-      this.$store.state.url.pathname = this.vehicle.field_opties[i].url
-      axios.get(`${this.$store.state.url}?_format=json`)
-        .then(({data: response}) => {
-          this.options[i] = response
-        })
-        .catch(({message: error}) => { this.message.error += error })
-    }
-    console.log(this.options) */
-  },
-  methods: {
-    /* getOptions: function (path, i) {
-      this.$store.state.url.pathname = path
-      axios.get(`${this.$store.state.url}?_format=json`)
-        .then(({data: response}) => {
-          this.options[i] = response
-          console.log(this.options)
-        })
-        .catch(({message: error}) => { this.message.error += error })
-    } */
   }
 }
 </script>

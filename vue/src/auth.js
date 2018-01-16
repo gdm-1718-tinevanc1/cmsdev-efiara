@@ -9,7 +9,6 @@ export default{
   user: {
     user: [],
     authenticated: false,
-    // errormessage: '',
     lastlogin: '',
     message: {
       succes: '',
@@ -27,7 +26,6 @@ export default{
         this.user.authenticated = true
         store.state.error_authenticated = ''
         localStorage.setItem('profileId', this.user.user.current_user.uid)
-        // console.log(this.user.user.current_user.uid)
         let authToken = md5(this.user.user.current_user.name, ':', creds.pass)
 
         store.state.headers = {
@@ -48,7 +46,6 @@ export default{
         } else {
           router.push({name: 'ProfileEdit', params: {id: this.user.user.current_user.uid}})
         }
-        // router.push({name: 'Home'})
       })
       .catch(({message: error}) => {
         this.user.message.error = error
@@ -67,13 +64,11 @@ export default{
     this.credsLogin = creds
     axios.post(`${store.state.url}?_format=hal_json`, creds)
       .then(response => {
-        // this.message.succes = 'Geregistreerd.'
         let credentials = {'name': this.credsLogin.name.value, 'pass': this.credsLogin.pass.value}
         this.login(credentials, 'register')
       })
       .catch(error => {
         this.user.message.error = error.response.data.message
-        // this.user.errormessage = error.response.data.message
       })
   },
 

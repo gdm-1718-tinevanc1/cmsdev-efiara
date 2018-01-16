@@ -48,7 +48,6 @@ import * as moment from 'moment'
 import Main from '../../../main.js'
 import Requests from '../../../requests.js'
 import Datepicker from 'vuejs-datepicker'
-// import * as moment from 'moment'
 
 export default {
   beforeCreate: function () {
@@ -77,19 +76,6 @@ export default {
     Requests.message.error = ''
     Requests.message.succes = ''
     this.newVehicle = Main.checkCreateOrEdit(this.$route)
-    /* axios.post('http://cmsdev.localhost/entity/file?_format=json', {
-      '_links':
-        {
-          'type': {'href': 'http://cmsdev.localhost/rest/type/file/file'}
-        },
-      'filename': [{'value': 'input.jpg'}],
-      'filemime': [{'value': 'image/jpeg'}],
-      'data': [{'value': 'insert-output-from-base64-here'}]
-    })
-      .then(({data: response}) => {
-        this.message.succes = 'Jouw voertuig is succesvol toegevoegd'
-      })
-      .catch((error) => { this.message.error = error.response.data.message }) */
   },
   methods: {
     refreshEvents () {
@@ -106,88 +92,14 @@ export default {
 
           let field_niet_beschikbaar = this.$store.state.create_vehicle.data.field_niet_beschikbaar
           let field_afbeelding_data = this.$store.state.create_vehicle.data.field_afbeelding_data
-          console.log(this.$store.state.create_vehicle.data.field_afbeelding_data)
           let field_opties = this.$store.state.create_vehicle.data.field_opties
           this.$store.state.url.pathname = 'entity/vehicles'
-          axios.post(`${this.$store.state.url}?_format=json`, this.$store.state.create_vehicle.data /* {
-              'name': {
-                'value': this.$store.state.create_vehicle.data.name[0].value
-              },
-              'field_model': {
-                'value': this.$store.state.create_vehicle.data.field_model[0].value
-              },
-              'field_inschrijvingsjaar': {
-                'value': this.$store.state.create_vehicle.data.field_inschrijvingsjaar[0].value
-              },
-              'field_zitplaatsen': {
-                'value': this.$store.state.create_vehicle.data.field_zitplaatsen[0].value
-              },
-              'field_deuren': {
-                'value': this.$store.state.create_vehicle.data.field_deuren[0].value
-              },
-              'field_versnellingsbak': {
-                'value': this.$store.state.create_vehicle.data.field_versnellingsbak[0].value
-              },
-              'field_kilometerstand': {
-                'value': this.$store.state.create_vehicle.data.field_kilometerstand[0].value
-              },
-              'field_straat': {
-                'value': this.$store.state.create_vehicle.data.field_straat[0].value
-              },
-              'field_huisnummer': {
-                'value': this.$store.state.create_vehicle.data.field_huisnummer[0].value
-              },
-              'field_locatie': {
-                'value': this.$store.state.create_vehicle.data.field_locatie[0].value
-              },
-              'field_land': {
-                'target_id': this.$store.state.create_vehicle.data.field_land[0].target_id
-              },
-              'field_prijs': {
-                'value': this.$store.state.create_vehicle.data.field_prijs[0].value
-              },
-              'field_kilometers_per_dag': {
-                'value': this.$store.state.create_vehicle.data.field_kilometers_per_dag[0].value
-              },
-              'field_min_leeftijd': {
-                'value': this.$store.state.create_vehicle.data.field_min_leeftijd[0].value
-              },
-              'field_verhuurdagen': {
-                'value': this.$store.state.create_vehicle.data.field_verhuurdagen[0].value
-              },
-              'field_eigenaar': {
-                'target_id': this.userId
-              },
-              'field_afbeelding_data': {
-                'value': this.$store.state.create_vehicle.data.field_afbeelding_data[0].value,
-                // 'value': this.$store.state.create_vehicle.data.field_afbeelding_data[1].value,
-                'value': this.$store.state.create_vehicle.data.field_afbeelding_data[1].value
-              },
-              /* 'field_opties': {
-                'target_id': 23
-              }, */
-              // field_afbeelding_data,
-              /* field_opties,
-              field_niet_beschikbaar 
-          } */, this.$store.state.headers
+          axios.post(`${this.$store.state.url}?_format=json`, this.$store.state.create_vehicle.data, this.$store.state.headers
           )
             .then(({data: response}) => {
               this.message.succes = 'Jouw voertuig is succesvol toegevoegd'
             })
             .catch(({error}) => { this.message.error = error })
-          /* axios.post('http://cmsdev.localhost/entity/file?_format=json', {
-            '_links':
-              {
-                'type': {'href': 'http://cmsdev.localhost/rest/type/file/file'}
-              },
-            'filename': [{'value': 'input.jpg'}],
-            'filemime': [{'value': 'image/jpeg'}],
-            'data': [{'value': 'insert-output-from-base64-here'}]
-          })
-            .then(({data: response}) => {
-              this.message.succes = 'Jouw voertuig is succesvol toegevoegd'
-            })
-            .catch((error) => { this.message.error = error.response.data.message }) */
         }
       })
     },
@@ -204,7 +116,6 @@ export default {
         },
         field_niet_beschikbaar
       }
-      // Requests.patchVehicle(this.$route.params.id, creds)
       this.$validator.validateAll().then((result) => {
         if (result) {
           Requests.patchVehicle(this.$route.params.id, creds)
@@ -217,7 +128,6 @@ export default {
         let index = this.unavailableDays.indexOf(moment(date).format('YYYY-MM-DD'))
         if (index > -1) {
           this.unavailableDays.splice(index, 1)
-          // let index2 = this.state.highlighted.dates.indexOf(date)
           this.state.highlighted.dates.splice(index, 1)
         }
       } else {

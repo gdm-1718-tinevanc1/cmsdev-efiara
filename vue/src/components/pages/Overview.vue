@@ -87,30 +87,13 @@ export default {
               this.vehicles[i].available = true
             } else {
               this.vehicles[i].available = false
-              // this.$set(this.vehicles[i].available, false)
               this.test = ' '
-              // this.$set(this.test, 'test')
               break
             }
           }
         })
         .catch(({message: error}) => { this.message.error = error })
     }
-  },
-  watch: {
-    /* vehicles: {
-      handler: function (val) {
-        this.vehicles = val
-        console.log(val)
-        console.log(val[1].available)
-      },
-      deep: true
-    },
-    test (val) {
-      alert('test')
-      this.test = val
-      alert('2:', this.test)
-    } */
   }
 }
 </script>

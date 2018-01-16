@@ -73,8 +73,10 @@ export default {
       .then(({data: response}) => {
         this.bookings = response
         for (var i = 0; i < response.length; i++) {
-          var url = response[i].field_voertuig[0].url
-          this.getVehicle(url, i, this.bookings)
+          if (response[i].field_voertuig[0].url) {
+            var url = response[i].field_voertuig[0].url
+            this.getVehicle(url, i, this.bookings)
+          }
         }
       })
       .catch(({message: error}) => { this.message.error = error })
@@ -89,8 +91,10 @@ export default {
         for (let i = 0; i < response.length; i++) {
           var url = response[i].field_voertuig[0].url
           this.getVehicle(url, i, this.requests)
-          var urlRenter = response[i].field_huurder[0].url
-          this.getUser(urlRenter, i, this.requests)
+          if (response[i].field_huurder[0].url) {
+            var urlRenter = response[i].field_huurder[0].url
+            this.getUser(urlRenter, i, this.requests)
+          }
         }
       })
       .catch(({message: error}) => { this.message.error = error })

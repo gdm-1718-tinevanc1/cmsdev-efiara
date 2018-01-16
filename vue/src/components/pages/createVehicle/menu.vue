@@ -27,7 +27,6 @@
 <script>
 import axios from 'axios'
 import Main from '../../../main.js'
-// import Requests from '../../../requests.js'
 
 export default {
   beforeCreate: function () {
@@ -46,9 +45,11 @@ export default {
     }
   },
   created: function () {
+    // check route: create or edit 
     this.newVehicle = Main.checkCreateOrEdit(this.$route.params)
   },
   methods: {
+    // delete vehicle
     deleteVehicle: function () {
       if (confirm(`Ben je zeker dat je '${this.vehicle.data.name[0].value}' wilt verwijderen?`)) {
         this.$store.state.url.pathname = `efiara/vehicles/${this.vehicleId}`

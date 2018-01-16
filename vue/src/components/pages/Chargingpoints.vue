@@ -132,14 +132,11 @@ export default {
       })
     },
     getPoint: function (marker) {
-      console.log(marker.id)
       let self = this
       let activePoint = this.chargingpoints[marker.id - 1]
       Vue.nextTick(function () {
         self.activePoint = activePoint
       })
-      // vm.message = 'new message' // change data
-      // vm.$el.textContent === 'new message' // false
     },
     getOwner: function (path, i) {
       this.$store.state.url.pathname = path

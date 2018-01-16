@@ -43,6 +43,9 @@ export default {
       user: Auth.user
     }
   },
+  created () {
+    Auth.user.message.succes = ''
+  },
   methods: {
     login () {
       let credentials = {'name': this.credentials.username, 'pass': this.credentials.password}

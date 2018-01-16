@@ -37,7 +37,6 @@
             </span>
           </div>
 
-          <!-- component? -->  
           <div>
             <div v-if="newVehicle">
               <div class="btn--primary"><a @click="next()"> Volgende</a></div>
@@ -47,7 +46,6 @@
               <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
             </div> 
           </div>
-          <!-- component? -->  
 
         </form>
       </div>
@@ -76,13 +74,15 @@ export default {
   created: function () {
     Requests.message.error = ''
     Requests.message.succes = ''
+    // get countries
     Requests.getCountries()
+    // check route: create or edit
     this.newVehicle = Main.checkCreateOrEdit(this.$route)
-
+    /*
     this.$store.state.url.pathname = `taxonomie/landen`
     axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => { this.countries = response })
-      .catch(({message: error}) => { this.message.error = error })
+      .catch(({message: error}) => { this.message.error = error }) */
   },
   methods: {
     next: function () {
@@ -111,7 +111,6 @@ export default {
           'target_id': this.vehicle.data.field_land[0].target_id
         }
       }
-      // Requests.patchVehicle(this.$route.params.id, creds)
       this.$validator.validateAll().then((result) => {
         if (result) {
           Requests.patchVehicle(this.$route.params.id, creds)

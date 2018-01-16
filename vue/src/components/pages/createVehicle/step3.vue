@@ -27,7 +27,6 @@
             </span>
           </div>
 
-        <!-- component? -->  
         <div>
           <div v-if="newVehicle">
             <div class="btn--primary"><a @click="next()"> Volgende</a></div>
@@ -37,7 +36,6 @@
             <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
           </div> 
         </div>
-        <!-- component? -->
         </form>
       </div>
     </div>
@@ -45,7 +43,6 @@
 
 
 <script>
-// import axios from 'axios'
 import Main from '../../../main.js'
 import Requests from '../../../requests.js'
 
@@ -89,7 +86,6 @@ export default {
           'value': this.vehicle.data.field_min_leeftijd[0].value
         }
       }
-      // Requests.patchVehicle(this.$route.params.id, creds)
       this.$validator.validateAll().then((result) => {
         if (result) {
           Requests.patchVehicle(this.$route.params.id, creds)

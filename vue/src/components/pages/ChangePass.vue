@@ -48,8 +48,6 @@ export default {
       }
     }
   },
-  created () {
-  },
   methods: {
     submit: function () {
       this.message.error = ''

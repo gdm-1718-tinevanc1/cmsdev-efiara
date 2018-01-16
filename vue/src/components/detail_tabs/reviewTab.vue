@@ -8,8 +8,7 @@
           <div class="bold">{{review.name[0].value}}</div>
           {{review.field_commentaar[0].value}}
         </div>
-        
-        <form v-if="!checkAuthVehicle" class="form--review" on:submit.prevent="submitReview" data-vv-scope="review">
+        <form v-if="!checkAuth" class="form--review" on:submit.prevent="submitReview" data-vv-scope="review">
           <hr>
           <p>Geef jouw mening:</p>
           <star-rating name="rating" @rating-selected="validateRating" v-model="reviewCredentials.score" :star-size="20" :show-rating="false"></star-rating>
@@ -39,7 +38,7 @@ import Auth from '../../auth.js'
 
 export default {
   name: 'reviewTab',
-  props: ['reviews', 'reviewTotal', 'checkAuthVehicle', 'getReviews'],
+  props: ['reviews', 'reviewTotal', 'checkAuth', 'getReviews'],
   data () {
     return {
       message: {
@@ -55,16 +54,17 @@ export default {
     }
   },
   methods: {
+    // validate rating stars
     validateRating: function () {
       this.message.error = ''
     },
+    // add review
     submitReview: function () {
       if (Auth.user.authenticated) {
-        // this.$validator.validateAll('review')
+        // check validatie
         this.$validator.validateAll('review').then((result) => {
           if (this.reviewCredentials.score) {
             this.$store.state.url.pathname = '/entity/review'
-            console.log(this.$store.state.headers)
             axios.post(`${this.$store.state.url}?_format=hal_json`,
               {
                 'name': {
@@ -83,7 +83,6 @@ export default {
             )
               .then(({data: response}) => {
                 this.message.succes = 'Je mening is toegevoegd'
-                // this.getReviews()
               })
               .catch(({message: error}) => { this.message.error = error })
           } else {

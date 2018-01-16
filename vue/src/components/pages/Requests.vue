@@ -20,8 +20,9 @@
               <router-link :to="{ name: 'Detail' , params: { id: request.vehicle[0].id[0].value }}"> 
                 <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p> 
               </router-link> 
-            <router-link :to="{ name: 'Profile', params: { id: request.field_huurder[0].target_id}}">{{request.renter[0].name[0].value}}</router-link>
-              <p class="bold request__adress"> {{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}</p>       
+            <router-link v-if="request.field_huurder[0].url" :to="{ name: 'Profile', params: { id: request.field_huurder[0].target_id}}">{{request.renter[0].name[0].value}}</router-link>
+            <p class="bold" v-else>Gebruiker is verwijderd</p> 
+            <p class="bold request__adress"> {{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ request.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ request.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.field_eind_datum[0].value | date("%R")}}</span> </p>
               <p class="request__price"><span class="bold">€ {{request.vehicle[0].field_prijs[0].value}}/km</span></p>
@@ -40,8 +41,9 @@
               <router-link :to="{ name: 'Detail' , params: { id: request.vehicle[0].id[0].value }}"> 
                 <p class="title--request">{{request.vehicle[0].name[0].value}} {{request.vehicle[0].field_model[0].value}}</p> 
               </router-link> 
-            <router-link :to="{ name: 'Profile', params: { id: request.field_huurder[0].target_id}}">{{request.renter[0].name[0].value}}</router-link>
-              <p class="bold request__adress"> {{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}</p>       
+            <router-link v-if="request.field_huurder[0].url" :to="{ name: 'Profile', params: { id: request.field_huurder[0].target_id}}">{{request.renter[0].name[0].value}}</router-link>
+            <p class="bold" v-else>Gebruiker is verwijderd</p> 
+            <p class="bold request__adress"> {{request.vehicle[0].field_straat[0].value}} {{request.vehicle[0].field_huisnummer[0].value}} - {{request.vehicle[0].field_locatie[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ request.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ request.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ request.field_eind_datum[0].value | date("%R")}}</span> </p>
               <p class="request__price"><span class="bold">€ {{request.vehicle[0].field_prijs[0].value}}/km</span></p>

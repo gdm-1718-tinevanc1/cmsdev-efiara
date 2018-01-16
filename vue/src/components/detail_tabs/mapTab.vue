@@ -21,8 +21,6 @@
 </template>
 
 <script>
-// import axios from 'axios'
-
 export default {
   name: 'mapTab',
   props: ['center', 'markers'],

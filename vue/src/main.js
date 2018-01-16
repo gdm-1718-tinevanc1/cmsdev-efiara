@@ -114,4 +114,3 @@ export default {
     }
   }
 }
-/* url.pathname = 'test/1' */

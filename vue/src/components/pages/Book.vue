@@ -18,6 +18,7 @@
           <p class="book--price">Prijs: € {{ vehicle.field_prijs[0].value}} /dag </p>
           <p class="book--price" v-if="price">Totale prijs: € {{ price }} </p>
 
+          <div class="message--succes">{{message.succes}}</div>
            <div class="message--error"> <br>
             <ul v-for="error in errors.all()">
               <li>{{error}}</li>
@@ -37,9 +38,6 @@
 import Datepicker from 'vuejs-datepicker'
 import * as moment from 'moment'
 import axios from 'axios'
-/* import axios from 'axios'
-import * as moment from 'moment'
-Vue.use(require('vue-moment')) */
 
 export default {
   beforeCreate: function () {
@@ -124,7 +122,7 @@ export default {
         )
           .then(({data: response}) => {
             this.message.succes = 'U heeft succesvol geboekt'
-            this.$router.push({name: 'Bookings'})
+            // this.$router.push({name: 'Bookings'})
           })
           .catch(({message: error}) => { this.message.error = error })
       })
@@ -146,7 +144,6 @@ export default {
       this.state.disabled_enddate.to = this.data_book.startdate
       let maxdays = this.vehicle.field_verhuurdagen[0].value
       let enddate = moment(this.data_book.startdate).add(maxdays - 1, 'days')
-      // console.log(this.state.disabled_enddate)
       this.state.disabled_enddate.from = enddate._d
       let stop = false
       for (let i = 0; i < maxdays && !stop; i++) {

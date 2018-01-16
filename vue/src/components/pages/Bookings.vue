@@ -18,14 +18,19 @@
                   <option disabled="disabled" value="Afgekeurd">Afgekeurd</option>
                 </select>
               </i>
+              <span v-if="booking.field_voertuig[0].url">
               <img v-if="booking.vehicle[0].field_afbeelding_data.length" class="image--booking" :src="booking.vehicle[0].field_afbeelding_data[0].value"> 
-              <router-link :to="{ name: 'Detail' , params: { id: booking.vehicle[0].id[0].value }}"> 
+              <router-link v-if="booking.vehicle[0].name" :to="{ name: 'Detail' , params: { id: booking.vehicle[0].id[0].value }}"> 
                 <p class="title--request">{{booking.vehicle[0].name[0].value}} {{booking.vehicle[0].field_model[0].value}}</p>  
               </router-link>
               <p class="bold request__adress">{{booking.vehicle[0].field_straat[0].value}} {{booking.vehicle[0].field_huisnummer[0].value}} - {{booking.vehicle[0].field_locatie[0].value}}, {{booking.vehicle[0].field_land[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ booking.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ booking.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.field_eind_datum[0].value | date("%R")}}</span> </p>
-           </div>
+              </span>
+              <span v-else>
+                <p class="bold">Voertuig is reeds verwijderd</p>
+              </span>   
+          </div>
         </div>
 
 
@@ -33,18 +38,24 @@
           <i v-if="!show" class="fa fa-angle-down" aria-hidden="true"></i>
           <i v-else class="fa fa-angle-up" aria-hidden="true"></i> 
         </div>
+        
         <div v-for="booking in orderedBookings" v-if="show && !checkDate(booking)">
            <div class="booking">  
               <p class="booking__price"><span class="bold">Totaal: € {{booking.field_prijs[0].value}}</span></p>
               <i class="fa fa-check request__check" v-bind:class="booking.field_status[0].value" @tap="dropdown($event)" @click="dropdown($event)" aria-hidden="true">
               </i>
+              <span v-if="booking.field_voertuig[0].url">
               <img v-if="booking.vehicle[0].field_afbeelding_data.length" class="image--booking" :src="booking.vehicle[0].field_afbeelding_data[0].value"> 
-              <router-link :to="{ name: 'Detail' , params: { id: booking.vehicle[0].id[0].value }}"> 
+              <router-link v-if="booking.vehicle[0].name" :to="{ name: 'Detail' , params: { id: booking.vehicle[0].id[0].value }}"> 
                 <p class="title--request">{{booking.vehicle[0].name[0].value}} {{booking.vehicle[0].field_model[0].value}}</p>  
               </router-link>
               <p class="bold request__adress">{{booking.vehicle[0].field_straat[0].value}} {{booking.vehicle[0].field_huisnummer[0].value}} - {{booking.vehicle[0].field_locatie[0].value}}, {{booking.vehicle[0].field_land[0].value}}</p>       
               <p class="request__date">van <span class="bold">{{ booking.name[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.name[0].value | date("%R")}}</span> 
               tot <span class="bold">{{ booking.field_eind_datum[0].value | date("%a %d %b. %Y") }} </span> om <span class="bold">{{ booking.field_eind_datum[0].value | date("%R")}}</span> </p>
+              </span>
+              <span v-else>
+                <p class="bold">Voertuig is reeds verwijderd</p>
+              </span> 
            </div>
         </div>
 
@@ -56,8 +67,6 @@
 import axios from 'axios'
 import Requests from '../../requests.js'
 import * as moment from 'moment'
-/*
-import axios from 'axios' */
 import * as _ from 'lodash'
 
 export default {

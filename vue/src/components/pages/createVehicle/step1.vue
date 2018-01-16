@@ -59,7 +59,6 @@
             </span>
           </div>
 
-          <!-- component? -->  
           <div>
             <div v-if="newVehicle">
               <div class="btn--primary"><a @click="next()"> Volgende</a></div>
@@ -69,9 +68,7 @@
               <div class="btn--primary"><a @click="save()"> Aanpassen</a></div>
             </div> 
           </div>
-          <!-- component? -->  
 
-           <!-- to="/vehicles/create/step2" -->
         </form>
       </div>
     </div>
@@ -102,17 +99,22 @@ export default {
   created: function () {
     Requests.message.error = ''
     Requests.message.succes = ''
+    // check route: create or edit
     this.newVehicle = Main.checkCreateOrEdit(this.$route)
+
+    // get all options
     this.$store.state.url.pathname = `taxonomie/opties`
     axios.get(`${this.$store.state.url}?_format=hal_json`)
       .then(({data: response}) => { this.options = response })
       .catch(({message: error}) => { this.message.error = error })
-    // alert(this.vehicle.data.field_opties.length)
+
+    // get options from vehicle
     for (var i = 0; i < this.vehicle.data.field_opties.length; i++) {
       this.getOptions(this.vehicle.data.field_opties[i].url, i)
     }
   },
   methods: {
+    // go to next page and save data in $store
     next: function () {
       this.$validator.validateAll().then((result) => {
         if (result) {
@@ -134,6 +136,7 @@ export default {
         }
       })
     },
+    // edit the vehicle
     save: function () {
       /* eslint-disable camelcase */
       let field_opties = []
@@ -146,8 +149,6 @@ export default {
           field_afbeelding_data = []
           field_afbeelding_data[i] = { 'value': this.images[i] }
         }
-      } else {
-        // field_afbeelding_data = ''
       }
       let creds = {
         'name': {
@@ -174,8 +175,6 @@ export default {
         field_opties,
         field_afbeelding_data
         }
-        // console.log(creds)
-        // Requests.patchVehicle(this.$route.params.id, creds)
         this.$validator.validateAll().then((result) => {
           if (result) {
             Requests.patchVehicle(this.$route.params.id, creds)
@@ -183,6 +182,7 @@ export default {
         })
       /* eslint-enable camelcase */
     },
+    // get options from vehicle
     getOptions: function (path, i) {
       this.$store.state.url.pathname = path
       axios.get(`${this.$store.state.url}?_format=json`)
@@ -191,6 +191,7 @@ export default {
         })
         .catch(({message: error}) => { this.message.error = error })
     },
+    // get images
     getImages: function () {
       let input = document.getElementById('image')
       let images = []
@@ -206,7 +207,6 @@ export default {
           fr.readAsDataURL(input.files[i])
         }
         this.images = images
-        console.log(this.images)
       }
     }
   },
